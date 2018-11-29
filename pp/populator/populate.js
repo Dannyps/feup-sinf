@@ -1,6 +1,6 @@
 "use strict";
 
-const mysql = require('mysql');
+global.mysql = require('mysql');
 const fs = require('fs');
 const util = require('util');
 const requireDir = require('require-dir');
@@ -20,7 +20,8 @@ global.con = mysql.createConnection({
 	host: "rr.dannyps.net",
 	user: "sinf",
 	password: "MJwaIGQCBwO3MWlj",
-	database: "sinf"
+	database: "sinf",
+	charset: "utf8"
 });
 
 
@@ -35,34 +36,14 @@ con.connect(function (err) {
  *
  */
 function start() {
-	saft.AuditFile.MasterFiles.Product.forEach(product => {
-		ins.product(product);
-		process.exit();
+	global.MastersFilesDefaultID = 1;
+	ins.masterFilesId(MastersFilesDefaultID).then(MFid => {
+		// mastersfile has been created with id <MDid>.
+		if (MFid != MastersFilesDefaultID)
+			// insert products
+			saft.AuditFile.MasterFiles.Product.forEach(product => {
+				ins.product(product);
+			});
+			// insert suppliers
 	});
-
-
-	// saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
-	// 	invoice.Line.forEach(line => {
-	// 		//_flog(line);
-	// 		insertLine(line);
-	// 		process.exit();
-	// 	});
-	// });
 }
-
-
-
-// console.log(saft.AuditFile.SourceDocuments.SalesInvoices.Invoice);
-
-
-
-
-/*
-
-var sql = "show tables;";
-	con.query(sql, function (err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
-	
-*/
