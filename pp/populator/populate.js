@@ -5,7 +5,7 @@ const fs = require('fs');
 const util = require('util');
 const requireDir = require('require-dir');
 
-global.ins = requireDir(__dirname + '/insertors')
+global.ins = requireDir(__dirname + '/inserters')
 
 
 function _flog(v) {
