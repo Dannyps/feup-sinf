@@ -77,19 +77,28 @@ function truncateDatabase() {
  */
 function start() {
 	global.MastersFilesDefaultID = 1;
-	ins.masterFilesId(MastersFilesDefaultID).then(MFid => {
-		// mastersfile has been created with id <MDid>.
-		if (MFid != MastersFilesDefaultID)
-			// insert products
-			console.log("inserting products... ");
+	global.GeneralLedgerAcountsID = 1;
+	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
+		
+		let accs = [];
+		ins.generalLedgerAccounts(saft.AuditFile.MasterFiles.GeneralLedgerAccounts.TaxonomyReference._text).then(_ => {
+			// insert accounts
+			saft.AuditFile.MasterFiles.GeneralLedgerAccounts.Account.forEach(acc => {
+				accs.push(ins.account(acc));
+			});
+			Promise.all(accs).then(_ => { // all account are in place
+				// insert suppliers
+				saft.AuditFile.MasterFiles.Supplier.forEach(sup => {
+					ins.supplier(sup);
+				});
+			})
+
+		});
+
+		// insert products
 		saft.AuditFile.MasterFiles.Product.forEach(product => {
 			ins.product(product);
 		});
-		console.log("inserting suppliers... ");
-				
-		// insert suppliers
-		saft.AuditFile.MasterFiles.Supplier.forEach(sup => {
-			ins.supplier(sup);
-		});
+
 	});
 }
