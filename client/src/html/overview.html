@@ -25,7 +25,6 @@
         ]);
 
         var options = {
-          title: 'Company Sales',
           curveType: 'function',
           legend: { position: 'bottom' },
           vAxis: {minValue: 0}
@@ -46,7 +45,6 @@
         ]);
 
         var options = {
-          title: 'Financial Balance',
           curveType: 'function',
           legend: { position: 'bottom' },
 
@@ -70,8 +68,7 @@
           ['C', 1]
         ]);
 
-        var options = {'title':'Best-seller products',
-                       'width':400,
+        var options = {'width':400,
                        'height':300};
 
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -218,6 +215,7 @@
                                     <h3>154 175 €</h3>
                                 </li>
                                 <li class="list-group-item">
+                                        <h4 class="text-center" style="color: #3a5faf">Sales over time</h4>
                                         <div id="curve_chart" style="width: 230px; height: 150px"></div>
                                 </li>
                             </ul>
@@ -237,6 +235,7 @@
                                     <h3>87 000 €</h3>
                                 </li>
                                 <li class="list-group-item">
+                                        <h4 class="text-center" style="color: #3a5faf">Biggest suppliers</h4>
                                         <div id="chart_div" style="width: 250px; height: 250px"></div>
                                 </li>
                             </ul>
@@ -280,6 +279,7 @@
                                         <h3>34 000 €</h3>
                                     </li>
                                     <li class="list-group-item">
+                                            <h4 class="text-center" style="color: #3a5faf">Cash over time</h4>
                                             <div id="line_chart" style="width: 230px; height: 150px"></div>
                                     </li>
                                 </ul>
