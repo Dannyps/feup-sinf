@@ -122,6 +122,30 @@
         
         
     </script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
+            ['2014',  1170,      460, 332, 102],
+            ['2015',  660,       1120, 400, 850],
+            ['2016',  1030,      540, 600, 910],
+            ['2017',  980,      830, 540, 1030],
+            ['2018',  1650,      1120, 730, 870]
+            ]);
+            
+            var options = {
+                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0},
+                legend: { position: 'bottom' }
+            };
+            
+            var chart = new google.visualization.AreaChart(document.getElementById('curve_chart_p'));
+            chart.draw(data, options);
+        }
+    </script>
     
 </head>
 <body>
@@ -242,7 +266,7 @@
                                         <h3>87 000 €</h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="chart_div"></div>
+                                        <div id="curve_chart_p"></div>
                                     </li>
                                 </ul>
                             </div>
