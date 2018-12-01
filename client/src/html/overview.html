@@ -5,88 +5,88 @@
     <title>Main Dashboard </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
-
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-
-      google.charts.setOnLoadCallback(drawLineChart);
-
-      google.charts.setOnLoadCallback(drawPieChart);
-
-      google.charts.setOnLoadCallback(drawLineChart2);
-
-      function drawLineChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Month', 'Sales'],
-          ['Jan',  2000],
-          ['Fev',  2000],
-          ['Mar',  3000]
-        ]);
-
-        var options = {
-          title: 'Company Sales',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-          vAxis: {minValue: 0}
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-        chart.draw(data, options);
-
+        google.charts.load('current', {'packages':['corechart']});
+        
+        google.charts.setOnLoadCallback(drawLineChart);
+        
+        google.charts.setOnLoadCallback(drawPieChart);
+        
+        google.charts.setOnLoadCallback(drawLineChart2);
+        
+        function drawLineChart() {
+            var data = google.visualization.arrayToDataTable([
+            ['Month', 'Sales'],
+            ['Jan',  2000],
+            ['Fev',  2000],
+            ['Mar',  3000]
+            ]);
+            
+            var options = {
+                title: 'Company Sales',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis: {minValue: 0}
+            };
+            
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+            
+            chart.draw(data, options);
+            
         }
-
+        
         function drawLineChart2() {
-        var data = google.visualization.arrayToDataTable([
-          ['Month', 'Sales'],
-          ['Jan',  -3000],
-          ['Fev',  -2000],
-          ['Mar',  200]
-        ]);
-
-        var options = {
-          title: 'Financial Balance',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
-
-        chart.draw(data, options);
-
+            var data = google.visualization.arrayToDataTable([
+            ['Month', 'Sales'],
+            ['Jan',  -3000],
+            ['Fev',  -2000],
+            ['Mar',  200]
+            ]);
+            
+            var options = {
+                title: 'Financial Balance',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                
+            };
+            
+            var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
+            
+            chart.draw(data, options);
+            
         }
-
-
+        
+        
         function drawPieChart() {
-
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
-          ['A', 3],
-          ['B', 1],
-          ['C', 1]
-        ]);
-
-        var options = {'title':'Best-seller products',
-                       'width':400,
-                       'height':300};
-
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-
+            
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Topping');
+            data.addColumn('number', 'Slices');
+            data.addRows([
+            ['A', 3],
+            ['B', 1],
+            ['C', 1]
+            ]);
+            
+            var options = {'title':'Best-seller products',
+            'width':400,
+            'height':300};
+            
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+            
         }
-
-
+        
+        
         function drawColumnChart() {
-
-        var data = new google.visualization.DataTable();
-        data.addColumn('time', 'Time');
-        data.addColumn('stock', 'Stock value');
-
-        data.addRows([
+            
+            var data = new google.visualization.DataTable();
+            data.addColumn('time', 'Time');
+            data.addColumn('stock', 'Stock value');
+            
+            data.addRows([
             [{v: [8, 0, 0], f: '8 am'}, 1],
             [{v: [9, 0, 0], f: '9 am'}, 2],
             [{v: [10, 0, 0], f:'10 am'}, 3],
@@ -97,196 +97,207 @@
             [{v: [15, 0, 0], f: '3 pm'}, 8],
             [{v: [16, 0, 0], f: '4 pm'}, 9],
             [{v: [17, 0, 0], f: '5 pm'}, 10],
-        ]);
-        
-        var options = {
-            title: 'Stock Value Over Time',
-            hAxis: {
-            title: 'Time',
-            format: 'h:mm a',
-            viewWindow: {
-                min: [7, 30, 0],
-                max: [17, 30, 0]
-            }
-            },
-            vAxis: {
-            title: 'Rating (scale of 1-10)'
-            }
-        };
-
-        var chart = new google.visualization.ColumnChart(
+            ]);
+            
+            var options = {
+                title: 'Stock Value Over Time',
+                hAxis: {
+                    title: 'Time',
+                    format: 'h:mm a',
+                    viewWindow: {
+                        min: [7, 30, 0],
+                        max: [17, 30, 0]
+                    }
+                },
+                vAxis: {
+                    title: 'Rating (scale of 1-10)'
+                }
+            };
+            
+            var chart = new google.visualization.ColumnChart(
             document.getElementById('column_div'));
-
-        chart.draw(data, options);
+            
+            chart.draw(data, options);
         }
-
-
+        
+        
     </script>
-
+    
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">360º Company Dashboard</a>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">360º Company Dashboard</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="overview.html">Overview</a>
+                </li>
+                <li>
+                    <a href="sales.html">Sales</a>
+                </li>
+                <li>
+                    <a href="purchases.html">Purchases</a>
+                </li>
+                <li>
+                    <a href="inventory.html">Inventory</a>
+                </li>
+                <li>
+                    <a href="finances.html">Finances</a>
+                </li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav">
-            <li class="active">
-                <a href="main.html">Overview</a>
-            </li>
-            <li>
-                <a href="sales.html">Sales</a>
-            </li>
-            <li>
-                <a href="purchases.html">Purchases</a>
-            </li>
-            <li>
-                <a href="inventory.html">Inventory</a>
-            </li>
-            <li>
-                <a href="finances.html">Finances</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-10 col-md-offset-1">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group dropdown">
-                    <button class="btn btn-timeFilter dropdown-toggle" type="button" data-toggle="dropdown">2017
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">2017</a></li>
-                        <li><a href="#">2016</a></li>
-                        <li><a href="#">2015</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-timeFilter active">
-                        <input type="radio" name="options" autocomplete="off" checked>None
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off" checked>Jan
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Fev
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Mar
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off" checked>Apr
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Jun
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Jul
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off" checked>Aug
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Set
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Oct
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off" checked>Nov
-                    </label>
-                    <label class="btn btn-timeFilter">
-                        <input type="radio" name="options" autocomplete="off">Dec
-                    </label>
+    </nav>
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-10 col-md-offset-1">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group dropdown">
+                        <button class="btn btn-timeFilter dropdown-toggle" type="button" data-toggle="dropdown">2017
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">2018</a></li>
+                                <li><a href="#">2017</a></li>
+                                <li><a href="#">2016</a></li>
+                                <li><a href="#">2015</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-timeFilter active">
+                                <input type="radio" name="options" autocomplete="off" checked>None
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off" checked>Jan
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Fev
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Mar
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off" checked>Apr
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Jun
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Jul
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off" checked>Aug
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Set
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Oct
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off" checked>Nov
+                            </label>
+                            <label class="btn btn-timeFilter">
+                                <input type="radio" name="options" autocomplete="off">Dec
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <hr/>
-    <div class="row dashboard">
-            <a href="sales.html">
-            <div class="col-sm-3">
-                    <h4 class="text-center" style="color: #3a5faf">Sales Overview</h4>
-                    <div class="row text-center">
-                        <div class="col-sm-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h4>Total Sales </h4>
-                                    <h3>154 175 €</h3>
-                                </li>
-                                <li class="list-group-item">
-                                        <div id="curve_chart" style="width: 230px; height: 150px"></div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-            </div>
-            </a>
-
-            <a href="purchases.html">
-                <div class="col-sm-3">
-                    <h4 class="text-center" style="color: #3a5faf">Purchases Overview</h4>
-                    <div class="row text-center">
-                        <div class="col-sm-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h4>Total Supplier Expenses </h4>
-                                    <h3>87 000 €</h3>
-                                </li>
-                                <li class="list-group-item">
-                                        <div id="chart_div" style="width: 250px; height: 250px"></div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="inventory.html">
-                <div class="col-sm-3">
-                    <h4 class="text-center" style="color: #3a5faf">Inventory Overview</h4>
-                    <div class="row text-center">
-                        <div class="col-sm-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h4>Total Stock Value </h4>
-                                    <h3>111 000 €</h3>
-                                </li>
-                                <li class="list-group-item">
-                                        <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
-                                        <ul class="list-group">
-                                          <li class="list-group-item list-group-item-danger">Book A <span class="badge">3</span></li>
-                                          <li class="list-group-item list-group-item-warning">Book B <span class="badge">25</span></li>
-                                          <li class="list-group-item list-group-item-warning">Book C <span class="badge">47</span></li>
-                                        </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="finances.html">
-                    <div class="col-sm-3">
-                        <h4 class="text-center" style="color: #3a5faf">Finances Overview</h4>
+            <hr/>
+            <div class="row dashboard">
+                <a href="sales.html">
+                    <div class="col-sm-12 col-md-6">
                         <div class="row text-center">
                             <div class="col-sm-12">
-                                <ul class="list-group">
+                                <ul class="list-group box-shadow">
                                     <li class="list-group-item">
-                                        <h4> Cash balance </h4>
-                                        <h3>34 000 €</h3>
+                                        <h4 class="text-center title" style="color: #3a5faf">Sales Overview</h4>
+                                    </li>
+                                    <li class="list-group-item" style="color: #333">
+                                        <h4 class="sub-title">Total Sales </h4>
+                                        <h3>154 175 €</h3>
                                     </li>
                                     <li class="list-group-item">
-                                            <div id="line_chart" style="width: 230px; height: 150px"></div>
+                                        <div id="curve_chart"></div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </a>
+                
+                <a href="purchases.html">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <ul class="list-group box-shadow">
+                                    <li class="list-group-item">
+                                        <h4 class="text-center title" style="color: #3a5faf">Purchases Overview</h4>
+                                    </li>
+                                    <li class="list-group-item" style="color: #333">
+                                        <h4 class="sub-title">Total Supplier Expenses </h4>
+                                        <h3>87 000 €</h3>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div id="chart_div"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="row dashboard">
+                <a href="inventory.html">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <ul class="list-group box-shadow">
+                                    <li class="list-group-item">
+                                        <h4 class="text-center title" style="color: #3a5faf">Inventory Overview</h4>
+                                    </li>
+                                    <li class="list-group-item values" style="color: #333">
+                                        <h4 class="sub-title">Total Stock Value </h4>
+                                        <h3>111 000 €</h3>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-danger">Book A <span class="badge">3</span></li>
+                                            <li class="list-group-item list-group-item-warning">Book B <span class="badge">25</span></li>
+                                            <li class="list-group-item list-group-item-warning">Book C <span class="badge">47</span></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="finances.html">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <ul class="list-group box-shadow">
+                                    <li class="list-group-item">
+                                        <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
+                                    </li>
+                                    <li class="list-group-item" style="color: #333">
+                                        <h4 class="sub-title"> Cash balance </h4>
+                                        <h3>34 000 €</h3>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div id="line_chart"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </div>

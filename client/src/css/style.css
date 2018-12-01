@@ -1,7 +1,8 @@
 /* Custom nav bar */
 .navbar-default {
-    background-color: #2a3199;
-    border-color: #131b92;
+    background-color: #3a5faf;
+    border-color: #3a5faf;
+    border-radius: 0;
 }
 
 .navbar-default .navbar-brand {
@@ -23,14 +24,15 @@
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #000000;
+    color: white;
+    background-color: #214F9C;
 }
 
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #000000;
-    background-color: #2364c5;
+    color: white;
+    background-color: #214F9C;
 }
 
 .navbar-default .navbar-nav > .open > a,
@@ -88,7 +90,7 @@
 .btn-timeFilter {
     color: #000000;
     background-color: #FFFFFF;
-    border-color: #1c6ad0;
+    border-color: #3a5faf;
 }
 
 .btn-timeFilter:hover,
@@ -96,9 +98,9 @@
 .btn-timeFilter:active,
 .btn-timeFilter.active,
 .open .dropdown-toggle.btn-timeFilter {
-    color: #000000;
-    background-color: #1c6ad0;
-    border-color: #1c6ad0;
+    color: white;
+    background-color: #3a5faf;
+    border-color: #3a5faf;
 }
 
 .btn-timeFilter:active,
@@ -136,7 +138,7 @@ fieldset[disabled] .btn-timeFilter.active {
 .dropdown-btn:active,
 .dropdown-btn:visited,
 .dropdown-btn:focus{
-    background-color: #1c6ad0;
+    background-color: #3a5faf;
 }
 
 footer {
@@ -186,4 +188,18 @@ body{
     font-size: 20px;
     color: white;
     padding: 10px 20px;
+}
+
+.box-shadow {
+    -webkit-box-shadow: 0px 10px 18px -6px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 10px 18px -6px rgba(0,0,0,0.3);
+    box-shadow: 0px 10px 18px -6px rgba(0,0,0,0.3);
+}
+
+h4.title {
+    font-size: 22px;
+}
+
+h4.sub-title {
+    font-weight: bold;
 }
