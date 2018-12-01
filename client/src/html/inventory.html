@@ -10,38 +10,26 @@
     <script type="text/javascript">
         google.charts.load("current", {packages:["corechart"]});
         
-        google.charts.setOnLoadCallback(drawDonutChart);
-        
         google.charts.setOnLoadCallback(drawLineChart);
-        
-        function drawDonutChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['SKU', 'Units'],
-            ['A',     11],
-            ['B',      2],
-            ['C',  2]
-            ]);
-            
-            var options = {
-                title: 'Most Common SKUs',
-                pieHole: 0.4,
-            };
-            
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-            chart.draw(data, options);
-        }
-        
         
         function drawLineChart() {
             var data = google.visualization.arrayToDataTable([
-            ['Month', 'Sales'],
-            ['Jan',  2000],
-            ['Fev',  2000],
-            ['Mar',  3000]
+            ['Month', 'Stock', 'Sales'],
+            ['Jan',  1500, 300],
+            ['Fev',  1100, 500],
+            ['Mar',  2000, 730],
+            ['Apr',  2800, 840],
+            ['May',  3000, 620],
+            ['Jun',  2100, 980],
+            ['Jul',  2800, 1110],
+            ['Aug',  3200, 840],
+            ['Sep',  3800, 2810],
+            ['Oct',  2900, 2200],
+            ['Nov',  4000, 1950],
+            ['Dec',  3800, 2700],
             ]);
             
             var options = {
-                curveType: 'function',
                 legend: { position: 'bottom' },
                 vAxis: {minValue: 0}
             };

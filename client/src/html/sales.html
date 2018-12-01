@@ -12,11 +12,12 @@
         
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
-            ['Year', 'Product A', 'Product B'],
-            ['2013',  1000,      400],
-            ['2014',  1170,      460],
-            ['2015',  660,       1120],
-            ['2016',  1030,      540]
+            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
+            ['2014',  1170,      460, 332, 102],
+            ['2015',  660,       1120, 400, 850],
+            ['2016',  1030,      540, 600, 910],
+            ['2017',  980,      830, 540, 1030],
+            ['2018',  1650,      1120, 730, 870]
             ]);
             
             var options = {
@@ -28,6 +29,33 @@
             var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
+    </script>
+    <script type="text/javascript">
+      google.charts.load('current', {
+        'packages':['geochart'],
+        // Note: you will need to get a mapsApiKey for your project.
+        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+      });
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Sales (m€)'],
+          ['Germany', 200],
+          ['United States', 300],
+          ['Portugal', 400],
+          ['Canada', 500],
+          ['France', 600],
+          ['RU', 10]
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
     </script>
     
 </head>
@@ -124,7 +152,7 @@
             </div>
             <hr/>
             <div class="row">
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-6">
                     <div class="row text-center">
                         <div class="col-sm-12">
                             <ul class="list-group box-shadow">
@@ -144,13 +172,13 @@
                     </div>
                     <a href="#" style="display:block; text-align:center; color: #3a5faf">More Details</a>
                 </div>
-                <div class="col-sm-12 col-md-9">
+                <div class="col-sm-12 col-md-6">
                     <ul class="list-group box-shadow">
                         <li class="list-group-item">
                             <h4 class="text-center" style="color: #3a5faf">Best Selling</h4>
                         </li>
                         <li class="list-group-item">
-                            <div id="chart_div" style="height: 300px"></div>
+                            <div id="chart_div" style="height: 220px"></div>
                         </li>
                     </ul>
                 </div>
@@ -162,7 +190,7 @@
                         <div class="col-sm-12">
                             <ul class="list-group box-shadow">
                                 <li class="list-group-item">
-                                    <h4 class="text-center" style="color: #3a5faf">Costumers</h4>
+                                    <h4 class="text-center" style="color: #3a5faf">Best Costumers</h4>
                                 </li>
                                 <li class="list-group-item">
                                     <table class="table">
@@ -191,6 +219,21 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" style="display:block; text-align:center; color: #3a5faf">More Details</a>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center" style="color: #3a5faf">Sales By Country</h4>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="regions_div"></div>
                                 </li>
                             </ul>
                         </div>
