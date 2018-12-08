@@ -16,7 +16,7 @@
             var chartData = [];
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
-                chartData.push([item.year, item.A, item.B]);
+                chartData.push([item.year, item.A, item.B, item.C]);
             }
 
             // Create the data table.
@@ -24,6 +24,7 @@
             data.addColumn('number', 'Year');
             data.addColumn('number', 'Product A');
             data.addColumn('number', 'Product B');
+            data.addColumn('number', 'Product C');
             
             data.addRows(chartData);
 

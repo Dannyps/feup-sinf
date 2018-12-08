@@ -9,37 +9,38 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load("current", {packages:["corechart"]});
-        
         google.charts.setOnLoadCallback(drawLineChart);
         
         function drawLineChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Month', 'Stock', 'Sales'],
-            ['Jan',  1500, 300],
-            ['Fev',  1100, 500],
-            ['Mar',  2000, 730],
-            ['Apr',  2800, 840],
-            ['May',  3000, 620],
-            ['Jun',  2100, 980],
-            ['Jul',  2800, 1110],
-            ['Aug',  3200, 840],
-            ['Sep',  3800, 2810],
-            ['Oct',  2900, 2200],
-            ['Nov',  4000, 1950],
-            ['Dec',  3800, 2700],
-            ]);
-            
-            var options = {
-                legend: { position: 'bottom' },
-                vAxis: {minValue: 0}
-            };
-            
-            var chart = new google.visualization.LineChart(document.getElementById('linechart'));
-            
-            chart.draw(data, options);
-            
-        }
-        
+            $.get('http://localhost:5000/api/inventory/stockunits', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.month, item.A, item.B, item.C, item.D, item.E, item.F]);
+                }
+
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Product A');
+                data.addColumn('number', 'Product B');
+                data.addColumn('number', 'Product C');
+                data.addColumn('number', 'Product D');
+                data.addColumn('number', 'Product E');
+                data.addColumn('number', 'Product F');
+                
+                data.addRows(chartData);
+
+                var options = {
+                    vAxis: {minValue: 0}
+                };
+
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+                chart.draw(data, options);
+            }, 'json');
+            }
         
     </script>
     

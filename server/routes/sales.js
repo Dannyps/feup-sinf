@@ -21,6 +21,59 @@ router.get('/', function(req, res, next) {
   console.log('Sent list of items');
 });
 
+router.get('/totalsales', function(req, res, next) {
+
+  var totalSales = [
+    {
+        'year': 2013,
+        'A': 120,
+        'B': 40,
+        'C': 50,
+        'D': 50,
+        'E': 60,
+        'F': 70,
+    },
+    {
+        'year': 2014,
+        'A': 110,
+        'B': 30,
+        'C': 80,
+        'D': 50,
+        'E': 60,
+        'F': 70,
+    },
+    {
+        'year': 2015,
+        'A': 70,
+        'B': 40,
+        'C': 50,
+        'D': 50,
+        'E': 60,
+        'F': 70,
+    },
+    {
+        'year': 2016,
+        'A': 110,
+        'B': 130,
+        'C': 90,
+        'D': 50,
+        'E': 60,
+        'F': 70,
+    },
+    {
+        'year': 2017,
+        'A': 110,
+        'B': 70,
+        'C': 60,
+        'D': 50,
+        'E': 60,
+        'F': 70,
+    }
+  ];
+    res.json(totalSales);
+});
+
+
 /* GET purchases volume. */
 router.get('/bestsellers', function(req, res, next) {
   
