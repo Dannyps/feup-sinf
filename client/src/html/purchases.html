@@ -12,24 +12,29 @@
         google.charts.setOnLoadCallback(drawChart);
         
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
-            ['2014',  1170,      460, 332, 102],
-            ['2015',  660,       1120, 400, 850],
-            ['2016',  1030,      540, 600, 910],
-            ['2017',  980,      830, 540, 1030],
-            ['2018',  1650,      1120, 730, 870]
-            ]);
-            
-            var options = {
-                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0},
-                legend: { position: 'bottom' }
-            };
-            
-            var chart = new google.visualization.AreaChart(document.getElementById('curve_chart'));
-            chart.draw(data, options);
-        }
+            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.year, item.value]);
+                }
+
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Cash spent(Euros)');
+                data.addRows(chartData);
+
+                var options = {
+                    title: 'Cash Spent on Purchases Over Time'
+                };
+
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+                chart.draw(data, options);
+            }, 'json');
+            }
     </script>
     <script type="text/javascript">
       google.charts.load('current', {
@@ -176,7 +181,7 @@
                                     <h4 class="text-center" style="color: #3a5faf">Purchases</h4>
                                 </li>
                                 <li class="list-group-item">
-                                    <div id="curve_chart" style="height: 220px"></div>
+                                    <div id="linechart" style="height: 240px"></div>
                                 </li>
                         </ul>
                 </div>

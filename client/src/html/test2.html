@@ -53,7 +53,7 @@
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
-                    chartData.push([item.year, item.population]);
+                    chartData.push([item.year, item.value]);
                 }
 
                 // Create the data table.
@@ -68,6 +68,40 @@
 
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+                chart.draw(data, options);
+            }, 'json');
+            }
+        
+    </script>
+
+<script type="text/javascript">
+    
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawLineChart2);
+
+            function drawLineChart2() {
+            $.get('http://localhost:5000/api/sales/bestsellers', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.year, item.A, item.B]);
+                }
+
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Product A');
+                data.addColumn('number', 'Product B');
+                
+                data.addRows(chartData);
+
+                var options = {
+                    title: 'Cash Spent on Purchases Over Time'
+                };
+
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
                 chart.draw(data, options);
             }, 'json');
             }
@@ -133,6 +167,9 @@
                         </li>
                         <li class="list-group-item">
                                 <div id="linechart" style="height: 220px"></div>
+                        </li>
+                        <li class="list-group-item">
+                                <div id="linechart2" style="height: 220px"></div>
                         </li>
                     </ul>
                 </div>
