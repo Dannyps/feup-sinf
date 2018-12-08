@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Dashboard </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        
+        function drawChart() {
+            $.get('http://localhost:5000/api/purchases', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.cityName, item.income]);
+                }
+    
+                console.log(chartData);
+        
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'City Name');
+                data.addColumn('number', 'Income');
+                data.addRows(chartData);
+
+                console.log(data);
+        
+                var options = {
+                    title: 'Hungarian Income Spread'
+                };
+        
+                //create and draw the chart from DIV
+                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                chart.draw(data, options);
+            }, 'json');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+    
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawLineChart);
+
+            function drawLineChart() {
+            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.year, item.population]);
+                }
+
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Cash spent(Euros)');
+                data.addRows(chartData);
+
+                var options = {
+                    title: 'Cash Spent on Purchases Over Time'
+                };
+
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+                chart.draw(data, options);
+            }, 'json');
+            }
+        
+    </script>
+
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">360º Company Dashboard</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="overview.html">Dashboard</a>
+                </li>
+                <li class="active">
+                    <a href="sales.html">Sales</a>
+                </li>
+                <li>
+                    <a href="purchases.html">Purchases</a>
+                </li>
+                <li>
+                    <a href="inventory.html">Inventory</a>
+                </li>
+                <li>
+                    <a href="finances.html">Finances</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-user"></span>Sign Up
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-log-in"></span>Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+            <hr/>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                                <input type="button" onClick="drawChart()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <ul class="list-group box-shadow">
+                        <li class="list-group-item">
+                            <h4 class="text-center" style="color: #3a5faf">Best Selling</h4>
+                        </li>
+                        <li class="list-group-item">
+                            <div id="piechart" style="height: 220px"></div>
+                        </li>
+                        <li class="list-group-item">
+                                <div id="linechart" style="height: 220px"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center" style="color: #3a5faf">Sales By Country</h4>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="regions_div"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../javascript/test2.js"></script>
+</body>
+</html>

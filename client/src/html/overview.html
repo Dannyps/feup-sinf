@@ -61,22 +61,25 @@
         
         
         function drawPieChart() {
-            
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
-            data.addRows([
-            ['A', 3],
-            ['B', 1],
-            ['C', 1]
-            ]);
-            
-            var options = {'title':'Best-seller products',
-            'width':400,
-            'height':300};
-            
-            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            $.getJSON({
+                url: 'http://localhost:5000/api/purchases',
+                success: (data) => {
+                    console.log(data);
+                },
+                error: (error) => {
+                    console.error();
+                }
+            });
+
+        
+        // Create our data table out of JSON data loaded from server.
+        var data2 = new google.visualization.DataTable(data);
+
+        console.log(data2);
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data2, {width: 400, height: 240});
             
         }
         
@@ -154,13 +157,11 @@
                 },
                 error: (error) => {
                     console.error();
-                    
                 }
             });
         }
 
     </script>
-    
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -190,7 +191,7 @@
     
     
     <div class="container">
-        <button onclick="testFetch()">Fetch</button>
+        <button onclick="testFetch()">Fetch</button>     
         <div class="row">
             <div class="col-sm-12 col-md-10 col-md-offset-1">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -330,6 +331,9 @@
                                     </li>
                                     <li class="list-group-item">
                                         <div id="line_chart"></div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div id="chart_div"></div>
                                     </li>
                                 </ul>
                             </div>
