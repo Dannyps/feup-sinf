@@ -146,16 +146,18 @@
             var chart = new google.visualization.AreaChart(document.getElementById('curve_chart_p'));
             chart.draw(data, options);
         }
-                $.getJSON({
-                    url: 'http://localhost:5000/api/purchases',
-                    success: (data) => {
-                        console.log(data);
-                    },
-                    error: (error) => {
-                        console.error();
-                        
-                    }
-                });
+        function testFetch () {
+            $.getJSON({
+                url: 'http://localhost:5000/api/purchases',
+                success: (data) => {
+                    console.log(data);
+                },
+                error: (error) => {
+                    console.error();
+                    
+                }
+            });
+        }
 
     </script>
     
