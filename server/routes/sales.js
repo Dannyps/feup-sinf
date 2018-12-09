@@ -21,9 +21,9 @@ router.get('/', function(req, res, next) {
   console.log('Sent list of items');
 });
 
-router.get('/totalsales', function(req, res, next) {
+router.get('/productsales', function(req, res, next) {
 
-  var totalSales = [
+  var productSales = [
     {
         'year': 2013,
         'A': 120,
@@ -70,6 +70,26 @@ router.get('/totalsales', function(req, res, next) {
         'F': 70,
     }
   ];
+    res.json(productSales);
+});
+
+
+router.get('/totalsales', function(req, res, next) {
+    
+      var totalSales = [
+        {
+            'month': 'Jan',
+            'value': 11000
+        },
+        {
+            'month': 'Fev',
+            'value': 13000
+        },
+        {
+            'month': 'Mar',
+            'value': 10000
+        },
+    ];
     res.json(totalSales);
 });
 

@@ -106,5 +106,33 @@ router.get('/assets', function(req, res, next) {
   res.json(assets);
 });
 
+/* GET cash values (cash balance). */
+router.get('/cashbalance', function(req, res, next) {
+    
+    var cashBalance = [
+      {
+          'year': 2013,
+          'value': 11000
+      },
+      {
+          'year': 2014,
+          'value': 13000
+      },
+      {
+          'year': 2015,
+          'value': 10000
+      },
+      {
+          'year': 2016,
+          'value': 11000
+      },
+      {
+          'year': 2017,
+          'value': 12000
+      }
+    ];
+    res.json(cashBalance);
+  });
+
 
 module.exports = router;

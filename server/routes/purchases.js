@@ -46,30 +46,48 @@ router.get('/volume', function(req, res, next) {
         'year': 2017,
         'value': 12000
     }
-  ];
-  
-    res.json(volume);
-  
-  });
+  ];  
+  res.json(volume);
+});
 
-router.get('/filter', function(req, res, next) {
 
-  var list = [
+
+/* GET total expenses for each supplier. */
+router.get('/suppliertotal', function(req, res, next) {
+
+  var supplierExpenses = [
     {
-      name: "list1",
-      description: "a simple example list"
+        'year': 2013,
+        'A': 120,
+        'B': 40,
+        'C': 50,
     },
     {
-      name: "list2",
-      description: "another example list"
+        'year': 2014,
+        'A': 110,
+        'B': 30,
+        'C': 80,
     },
     {
-      name: "list3",
-      description: "yet another"
+        'year': 2015,
+        'A': 70,
+        'B': 40,
+        'C': 50,
     },
+    {
+        'year': 2016,
+        'A': 110,
+        'B': 130,
+        'C': 90,
+    },
+    {
+        'year': 2017,
+        'A': 110,
+        'B': 70,
+        'C': 60,
+    }
   ];
-  res.json(list);
-  console.log('Sent list of items');
+  res.json(supplierExpenses);
 });
 
 module.exports = router;

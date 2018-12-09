@@ -10,159 +10,100 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
-        
-        google.charts.setOnLoadCallback(drawLineChart);
-        
-        google.charts.setOnLoadCallback(drawPieChart);
-        
-        google.charts.setOnLoadCallback(drawLineChart2);
-        
-        function drawLineChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Month', 'Sales'],
-            ['Jan',  2000],
-            ['Fev',  2000],
-            ['Mar',  3000]
-            ]);
-            
-            var options = {
-                title: 'Company Sales',
-                curveType: 'function',
-                legend: { position: 'bottom' },
-                vAxis: {minValue: 0}
-            };
-            
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-            
-            chart.draw(data, options);
-            
-        }
-        
-        function drawLineChart2() {
-            var data = google.visualization.arrayToDataTable([
-            ['Month', 'Sales'],
-            ['Jan',  -3000],
-            ['Fev',  -2000],
-            ['Mar',  200]
-            ]);
-            
-            var options = {
-                title: 'Financial Balance',
-                curveType: 'function',
-                legend: { position: 'bottom' },
+        google.charts.setOnLoadCallback(drawTotalSalesChart);
+          
+        function drawTotalSalesChart() {
+            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.month, item.value]);
+                }
+    
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Value (Euros)');
+
                 
-            };
-            
-            var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
-            
-            chart.draw(data, options);
-            
+                data.addRows(chartData);
+    
+                var options = {
+                    vAxis: {minValue: 0}
+                };
+    
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
+                chart.draw(data, options);
+            }, 'json');
         }
-        
-        
-        function drawPieChart() {
-            $.getJSON({
-                url: 'http://localhost:5000/api/purchases',
-                success: (data) => {
-                    console.log(data);
-                },
-                error: (error) => {
-                    console.error();
-                }
-            });
-
-        
-        // Create our data table out of JSON data loaded from server.
-        var data2 = new google.visualization.DataTable(data);
-
-        console.log(data2);
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(data2, {width: 400, height: 240});
-            
-        }
-        
-        
-        function drawColumnChart() {
-            
-            var data = new google.visualization.DataTable();
-            data.addColumn('time', 'Time');
-            data.addColumn('stock', 'Stock value');
-            
-            data.addRows([
-            [{v: [8, 0, 0], f: '8 am'}, 1],
-            [{v: [9, 0, 0], f: '9 am'}, 2],
-            [{v: [10, 0, 0], f:'10 am'}, 3],
-            [{v: [11, 0, 0], f: '11 am'}, 4],
-            [{v: [12, 0, 0], f: '12 pm'}, 5],
-            [{v: [13, 0, 0], f: '1 pm'}, 6],
-            [{v: [14, 0, 0], f: '2 pm'}, 7],
-            [{v: [15, 0, 0], f: '3 pm'}, 8],
-            [{v: [16, 0, 0], f: '4 pm'}, 9],
-            [{v: [17, 0, 0], f: '5 pm'}, 10],
-            ]);
-            
-            var options = {
-                title: 'Stock Value Over Time',
-                hAxis: {
-                    title: 'Time',
-                    format: 'h:mm a',
-                    viewWindow: {
-                        min: [7, 30, 0],
-                        max: [17, 30, 0]
-                    }
-                },
-                vAxis: {
-                    title: 'Rating (scale of 1-10)'
-                }
-            };
-            
-            var chart = new google.visualization.ColumnChart(
-            document.getElementById('column_div'));
-            
-            chart.draw(data, options);
-        }
-        
-        
     </script>
+
+
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawSupplierExpensesChart);
         
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
-            ['2014',  1170,      460, 332, 102],
-            ['2015',  660,       1120, 400, 850],
-            ['2016',  1030,      540, 600, 910],
-            ['2017',  980,      830, 540, 1030],
-            ['2018',  1650,      1120, 730, 870]
-            ]);
-            
-            var options = {
-                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0},
-                legend: { position: 'bottom' }
-            };
-            
-            var chart = new google.visualization.AreaChart(document.getElementById('curve_chart_p'));
-            chart.draw(data, options);
-        }
-        function testFetch () {
-            $.getJSON({
-                url: 'http://localhost:5000/api/purchases',
-                success: (data) => {
-                    console.log(data);
-                },
-                error: (error) => {
-                    console.error();
+        function drawSupplierExpensesChart() {
+            $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.year, item.A, item.B, item.C]);
                 }
-            });
+    
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Supplier A');
+                data.addColumn('number', 'Supplier B');
+                data.addColumn('number', 'Supplier C');
+                
+                data.addRows(chartData);
+    
+                var options = {
+                    vAxis: {minValue: 0}
+                };
+    
+                var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+                chart.draw(data, options);
+            }, 'json');
         }
-
     </script>
+
+
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+        $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+            console.log(response);
+            var chartData = [];
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                chartData.push([item.year, item.A, item.B, item.C]);
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Year');
+            data.addColumn('number', 'Supplier A');
+            data.addColumn('number', 'Supplier B');
+            data.addColumn('number', 'Supplier C');
+            
+            data.addRows(chartData);
+
+            var options = {
+                vAxis: {minValue: 0}
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+            chart.draw(data, options);
+        }, 'json');
+    }
+</script>
 </head>
+
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -261,7 +202,7 @@
                                         <h3>154 175 €</h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="curve_chart"></div>
+                                        <div id="linechart2"></div>
                                     </li>
                                 </ul>
                             </div>
@@ -282,7 +223,7 @@
                                         <h3>87 000 €</h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="curve_chart_p"></div>
+                                        <div id="linechart3"></div>
                                     </li>
                                 </ul>
                             </div>
