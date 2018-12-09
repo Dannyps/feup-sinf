@@ -1,27 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-
-  var cityData = [
-    {
-        'cityName': 'Debrecen',
-        'population': 237888,
-        'income': 135430
-    },
-    {
-        'cityName': 'Miskolc',
-        'population': 216470,
-        'income': 151102
-    }
-  ];
-
-  res.json(cityData);
-
-});
-
-
 /* GET purchases volume. */
 router.get('/volume', function(req, res, next) {
   

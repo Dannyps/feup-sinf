@@ -111,25 +111,17 @@ router.get('/cashbalance', function(req, res, next) {
     
     var cashBalance = [
       {
-          'year': 2013,
+          'month': 'Jan',
           'value': 11000
       },
       {
-          'year': 2014,
+          'month': 'Fev',
           'value': 13000
       },
       {
-          'year': 2015,
+          'month': 'Mar',
           'value': 10000
       },
-      {
-          'year': 2016,
-          'value': 11000
-      },
-      {
-          'year': 2017,
-          'value': 12000
-      }
     ];
     res.json(cashBalance);
   });

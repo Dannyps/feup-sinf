@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
     
-    <script src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
@@ -71,25 +70,22 @@
         }
     </script>
 
-
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawCashBalanceChart);
     
-    function drawChart() {
-        $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+    function drawCashBalanceChart() {
+        $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
             console.log(response);
             var chartData = [];
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
-                chartData.push([item.year, item.A, item.B, item.C]);
+                chartData.push([item.month, item.value]);
             }
 
             var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Year');
-            data.addColumn('number', 'Supplier A');
-            data.addColumn('number', 'Supplier B');
-            data.addColumn('number', 'Supplier C');
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Cash balance (Euros)');
             
             data.addRows(chartData);
 
@@ -97,11 +93,12 @@
                 vAxis: {minValue: 0}
             };
 
-            var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+            var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
             chart.draw(data, options);
         }, 'json');
     }
-</script>
+    </script>
+
 </head>
 
 <body>
@@ -271,10 +268,7 @@
                                         <h3>34 000 €</h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="line_chart"></div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div id="chart_div"></div>
+                                        <div id="linechart4"></div>
                                     </li>
                                 </ul>
                             </div>
@@ -289,5 +283,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="../javascript/dashboard.js"></script>
+<script src="../js/jquery.min.js"></script>
 </body>
 </html>
