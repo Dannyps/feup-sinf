@@ -21,6 +21,38 @@ router.get('/', function(req, res, next) {
   console.log('Sent list of items');
 });
 
+/* GET sales by country listing. */
+router.get('/countrysales', function(req, res, next) {
+    var salesByCountry = [
+      {
+        country: "Germany",
+        sales: 200
+      },
+      {
+        country: "United States",
+        sales: 300
+      },
+      {
+        country: "Spain",
+        sales: 300
+      },
+      {
+        country: "Portugal",
+        sales: 400
+      },
+      {
+        country: "Russia",
+        sales: 150
+      },
+      {
+        country: "Japan",
+        sales: 100
+      },
+
+    ];
+    res.json(salesByCountry);
+  });
+
 router.get('/productsales', function(req, res, next) {
 
   var productSales = [

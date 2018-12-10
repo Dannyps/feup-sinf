@@ -43,29 +43,38 @@
     <script type="text/javascript">
       google.charts.load('current', {
         'packages':['geochart'],
-        // Note: you will need to get a mapsApiKey for your project.
-        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
         'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
       });
       google.charts.setOnLoadCallback(drawRegionsMap);
 
-      function drawRegionsMap() {
-        var data = google.visualization.arrayToDataTable([
-          ['Country', 'Sales (m€)'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Portugal', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 10]
-        ]);
 
-        var options = {};
+      function drawRegionsMap() {
+      $.get('http://localhost:5000/api/sales/countrysales', function(response) {
+        console.log(response);
+        var chartData = [];
+        for(var idx = 0; idx < response.length; ++idx) {
+            var item = response[idx];
+            chartData.push([item.country, item.sales]);
+        }
+        var data = new google.visualization.DataTable();
+
+        console.log(chartData);
+
+        data.addColumn('string','Country');
+        data.addColumn('number','Sales');
+
+
+        data.addRows(chartData);
+
+        var options = {
+        };
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
         chart.draw(data, options);
-      }
+    }, 'json');
+
+    } 
+    
     </script>
     
 </head>
