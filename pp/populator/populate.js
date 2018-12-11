@@ -24,20 +24,20 @@ global.con = mysql.createConnection({
 	charset: "utf8"
 });
 
-
+/*
 con.connect(function (err) {
 	if (err) throw err;
 	start();
-});
+});*/
 
-/*
+
 con.connect(function (err) {
 	if (err) throw err;
 	truncateDatabase().then(_ => {
 		console.log("start populating");
 		start();
 	});
-});*/
+});
 
 /**
  * Truncate database
@@ -51,7 +51,7 @@ function truncateDatabase() {
 				let p = new Promise(function (resolve, reject) {
 					results.forEach(res => {
 						let tb = res.Tables_in_sinf;
-						con.query('truncate table ' + tb, function (err, result) {
+						con.query('DELETE FROM ' + tb + "", function (err, result) {
 							console.log("truncated " + tb);
 							if (err) throw err;
 						});
@@ -78,6 +78,7 @@ function truncateDatabase() {
 function start() {
 	global.MastersFilesDefaultID = 1;
 	global.GeneralLedgerAcountsID = 1;
+	global.TaxTableID = 1;
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 		
 		let accs = [];
@@ -99,6 +100,17 @@ function start() {
 		saft.AuditFile.MasterFiles.Product.forEach(product => {
 			ins.product(product);
 		});
+
+		ins.taxTable(TaxTableID).then(_=>{
+			saft.AuditFile.MasterFiles.TaxTable.TaxTableEntry.forEach(tte => {
+				ins.taxTableEntry(tte).then(res => {
+					console.log(res);
+				});
+			});
+			
+		})
+
+		
 
 	});
 }
