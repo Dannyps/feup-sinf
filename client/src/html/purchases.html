@@ -66,8 +66,55 @@
         }, 'json');
       }
     </script>
+
+    <script>
+        function fetchTotalPurchasesAndGrowth() {
+          $.get('http://localhost:5000/api/purchases/volume', function(response) {
+            console.log(response);
+            var totalPurchases = 0;
+            totalPurchases = response[response.length - 1].value;
+
+            console.log(totalPurchases);
+
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalSales += item.value;
+                chartData.push([item.month, item.value]);
+            }
+    
+            console.log(totalSales);
+    
+            document.getElementById('totalsales2');
+    
+        }, 'json');
+    
+        }
+        </script>
+
+    <script>
+        function fetchPurchasesBySupplier() {
+        console.log('entrou');
+          $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+            console.log(response);
+            var totalExpenses = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalExpenses += item.value;
+            }
+    
+            console.log(totalExpenses);
+    
+            document.getElementById('totalsales');
+    
+        }, 'json');
+    
+        }
+    </script>
+
 </head>
 <body>
+    <button onclick="fetchPurchasesbySupplier()">test</button>
+    <p id="totalSales"></p>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">

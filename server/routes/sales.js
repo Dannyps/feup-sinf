@@ -145,5 +145,26 @@ router.get('/bestsellers', function(req, res, next) {
 
   });
 
+  /* GET purchases volume. */
+router.get('/salesbycustomer', function(req, res, next) {
+    
+    var salesByCustomer = [
+      {
+        'customer': 'Customer A',
+        'value': 70000,
+      },
+      {
+        'customer': 'Customer B',
+        'value': 30000,
+      },
+      {
+        'customer': 'Customer C',
+        'value': 50000,
+      },
+    ];
+      res.json(volume);
+  
+    });
+
 
 module.exports = router;

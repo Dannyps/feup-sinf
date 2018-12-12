@@ -115,6 +115,25 @@ router.get('/stockunits', function(req, res, next) {
     ];
       res.json(stockUnits);
   });
+
+  router.get('/inventoryvalue', function(req, res, next) {
+    
+      var inventoryValue = [
+        {
+          'month': 'Jan',
+          'value': 5000,
+        },
+        {
+          'month': 'Feb',
+          'value': 6000,
+        },
+        {
+          'month': 'Mar',
+          'value': 5000,
+        },
+      ];
+        res.json(inventoryValue);
+    });
   
 
 module.exports = router;

@@ -65,35 +65,17 @@ router.get('/suppliertotal', function(req, res, next) {
 
   var supplierExpenses = [
     {
-        'year': 2013,
-        'A': 120,
-        'B': 40,
-        'C': 50,
+      'supplier': 'Customer A',
+      'value': 70000,
     },
     {
-        'year': 2014,
-        'A': 110,
-        'B': 30,
-        'C': 80,
+      'supplier': 'Customer B',
+      'value': 30000,
     },
     {
-        'year': 2015,
-        'A': 70,
-        'B': 40,
-        'C': 50,
+      'supplier': 'Customer C',
+      'value': 50000,
     },
-    {
-        'year': 2016,
-        'A': 110,
-        'B': 130,
-        'C': 90,
-    },
-    {
-        'year': 2017,
-        'A': 110,
-        'B': 70,
-        'C': 60,
-    }
   ];
   res.json(supplierExpenses);
 });

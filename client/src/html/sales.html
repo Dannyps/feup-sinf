@@ -74,9 +74,36 @@
     } 
     
     </script>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+
+    </script>
+
+    <script>
+    function fetchTotalSales() {
+    console.log('entrou');
+      $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+        console.log(response);
+        var chartData = [];
+        var totalSales = 0;
+        for(var idx = 0; idx < response.length; ++idx) {
+            var item = response[idx];
+            totalSales += item.value;
+            chartData.push([item.month, item.value]);
+        }
+
+        console.log(totalSales);
+
+        document.getElementById('totalsales');
+
+    }, 'json');
+
+    }
+    </script>
     
 </head>
 <body>
+    <button onclick="fetchTotalSales()">test</button>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
