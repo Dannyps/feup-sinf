@@ -82,6 +82,7 @@ function start() {
 	global.TaxTableID = 1;
 	global.GeneralLedgerEntriesID = 1;
 	global.SalesInvoicesID = 1;
+	global.MovementGoodsID = 1;
 
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 
@@ -134,6 +135,12 @@ function start() {
 		ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
 			saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
 				ins.invoice(invoice);
+			})
+		});
+
+		ins.movementOfGoods(saft.AuditFile.SourceDocuments.movementOfGoods).then(_ => {
+			saft.AuditFile.SourceDocuments.SalesInvoices.movementOfGoods.forEach(movementOfGoods => {
+				ins.movementOfGoods(movementOfGoods);
 			})
 		});
 	})
