@@ -132,6 +132,7 @@ function start() {
 	});
 
 	Promise.all(journalPromises).then(_ => {
+		
 		ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
 			saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
 				ins.invoice(invoice);
@@ -143,6 +144,7 @@ function start() {
 				ins.movementOfGoods(movementOfGoods);
 			})
 		});
+
 	})
 
 }

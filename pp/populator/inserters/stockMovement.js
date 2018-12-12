@@ -7,6 +7,7 @@
  * @return {Promise}
  */
 module.exports = function (sm) {
+    
     // let GroupingCode, TaxonomyCode;
     // GroupingCode = (acc.GroupingCode == undefined ? null : acc.GroupingCode._text);
     // let TransactionID = (i.TransactionID == undefined ? null : i.TransactionID._text);
