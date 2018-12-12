@@ -81,6 +81,8 @@ function start() {
 	global.GeneralLedgerAcountsID = 1;
 	global.TaxTableID = 1;
 	global.GeneralLedgerEntriesID = 1;
+	global.SalesInvoicesID = 1;
+
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 
 		let accs = [];
@@ -88,14 +90,21 @@ function start() {
 			// insert accounts
 			saft.AuditFile.MasterFiles.GeneralLedgerAccounts.Account.forEach(acc => {
 				accs.push(ins.account(acc));
+
 			});
 			Promise.all(accs).then(_ => { // all account are in place
+				console.log("Accounts imported.");
+			
+				// insert customers
+				saft.AuditFile.MasterFiles.Customer.forEach(c => {
+					ins.customer(c);
+				});
+
 				// insert suppliers
 				saft.AuditFile.MasterFiles.Supplier.forEach(sup => {
 					ins.supplier(sup);
 				});
 			})
-
 		});
 
 		// insert products
@@ -114,10 +123,19 @@ function start() {
 		});
 	});
 
+	let journalPromises = [];
 	ins.generalLedgerEntries(saft.AuditFile.GeneralLedgerEntries).then(_ => {
 		saft.AuditFile.GeneralLedgerEntries.Journal.forEach(journal => {
-			ins.journal(journal);
+			journalPromises.push(ins.journal(journal));
 		})
 	});
+
+	Promise.all(journalPromises).then(_ => {
+		ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
+			saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
+				ins.invoice(invoice);
+			})
+		});
+	})
 
 }

@@ -1,26 +1,24 @@
 "use strict";
 
 /**
- * Insert a supplier into the database
+ * Insert a customer into the database
  *
- * @param {*} sup supplier
+ * @param {*} sup customer
  * @return {Promise}
  */
-module.exports = function (sup) {
+module.exports = function (c) {
 
-    addAddresses(sup).then(addrIDs => {
+    addAddresses(c).then(addrIDs => {
         let baID = addrIDs[1];
         let saID = addrIDs[0];
 
         return new Promise(function (resolve, reject) {
 
-            let telephone = (sup.Telephone == undefined ? null : sup.Telephone._text);
-            let fax = (sup.Fax == undefined ? null : sup.Fax._text);
-            let website = (sup.Website == undefined ? null : sup.Website._text);
 
-            let sql = "INSERT IGNORE INTO supplier (id, account_id, supplier_tax_id, company_name, billing_address, ship_from_address, telephone, fax, website, master_files_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            let inserts = [sup.SupplierID._text, sup.AccountID._text, sup.SupplierTaxID._text, sup.CompanyName._text, baID, saID, telephone, fax, website, MastersFilesDefaultID];
+            let sql = "INSERT IGNORE INTO customer (id, account_id, customer_tax_id, company_name, billing_address, ship_to_address, self_billing_indicator, master_files_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            let inserts = [c.CustomerID._text, c.AccountID._text, c.CustomerTaxID._text, c.CompanyName._text, baID, saID, c.SelfBillingIndicator._text, MastersFilesDefaultID];
             sql = mysql.format(sql, inserts);
+            console.log(sql);
             con.query(sql, function (err, result) {
                 if (err) throw err;
                 resolve(true);
@@ -31,13 +29,13 @@ module.exports = function (sup) {
 
 /**
  * 
- * @param {*} sup 
+ * @param {*} c 
  * @return {Promise} with the ids of both the shipping address and the billing address, by this order.
  */
-function addAddresses(sup) {
+function addAddresses(c) {
     return new Promise(function (resolve, error) {
-        let pba = ins.address(sup.BillingAddress);
-        let psa = ins.address(sup.ShipFromAddress);
+        let pba = ins.address(c.BillingAddress);
+        let psa = ins.address(c.ShipToAddress);
 
         Promise.all([pba, psa]).then(addrIDs => {
             let saID = addrIDs[1];
