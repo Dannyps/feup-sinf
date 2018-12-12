@@ -24,6 +24,7 @@ global.con = mysql.createConnection({
 	charset: "utf8"
 });
 
+
 /*
 con.connect(function (err) {
 	if (err) throw err;
@@ -79,8 +80,9 @@ function start() {
 	global.MastersFilesDefaultID = 1;
 	global.GeneralLedgerAcountsID = 1;
 	global.TaxTableID = 1;
+	global.GeneralLedgerEntriesID = 1;
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
-		
+
 		let accs = [];
 		ins.generalLedgerAccounts(saft.AuditFile.MasterFiles.GeneralLedgerAccounts.TaxonomyReference._text).then(_ => {
 			// insert accounts
@@ -101,16 +103,21 @@ function start() {
 			ins.product(product);
 		});
 
-		ins.taxTable(TaxTableID).then(_=>{
+		// insert tax table
+		let taxTableEntriesIDs = [];
+		ins.taxTable(TaxTableID).then(_ => {
 			saft.AuditFile.MasterFiles.TaxTable.TaxTableEntry.forEach(tte => {
 				ins.taxTableEntry(tte).then(res => {
-					console.log(res);
+					taxTableEntriesIDs.push(res);
 				});
 			});
-			
-		})
-
-		
-
+		});
 	});
+
+	ins.generalLedgerEntries(saft.AuditFile.GeneralLedgerEntries).then(_ => {
+		saft.AuditFile.GeneralLedgerEntries.Journal.forEach(journal => {
+			ins.journal(journal);
+		})
+	});
+
 }
