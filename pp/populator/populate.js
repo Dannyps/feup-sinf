@@ -17,9 +17,9 @@ let saft = JSON.parse(text);
 
 
 global.con = mysql.createConnection({
-	host: "127.0.0.1",
-	user: "root",
-	password: "password",
+	host: "rr.dannyps.net",
+	user: "sinf",
+	password: "MJwaIGQCBwO3MWlj",
 	database: "sinf",
 	charset: "utf8"
 });
