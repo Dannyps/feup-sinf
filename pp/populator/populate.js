@@ -17,9 +17,9 @@ let saft = JSON.parse(text);
 
 
 global.con = mysql.createConnection({
-	host: "rr.dannyps.net",
-	user: "sinf",
-	password: "MJwaIGQCBwO3MWlj",
+	host: "127.0.0.1",
+	user: "root",
+	password: "password",
 	database: "sinf",
 	charset: "utf8"
 });
@@ -82,6 +82,7 @@ function start() {
 	global.TaxTableID = 1;
 	global.GeneralLedgerEntriesID = 1;
 	global.SalesInvoicesID = 1;
+	global.MovementGoodsID = 1;
 
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 
@@ -119,6 +120,12 @@ function start() {
 							ins.invoice(invoice);
 						});
 					});
+
+					ins.movementOfGoods(saft.AuditFile.SourceDocuments.MovementOfGoods).then(_ => {
+						saft.AuditFile.SourceDocuments.MovementOfGoods.StockMovement.forEach(stockMovement => {
+							ins.stockMovement(stockMovement);
+						})
+					});
 				});
 			})
 		});
@@ -138,6 +145,5 @@ function start() {
 			});
 		});
 	});
-
 
 }
