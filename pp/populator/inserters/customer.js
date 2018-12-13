@@ -8,19 +8,20 @@
  */
 module.exports = function (c) {
 
-    addAddresses(c).then(addrIDs => {
+    return addAddresses(c).then(addrIDs => {
         let baID = addrIDs[1];
         let saID = addrIDs[0];
 
         return new Promise(function (resolve, reject) {
+            let AccountID = (c.AccountID._text == "Desconhecido" ? null : c.AccountID._text);
 
-
-            let sql = "INSERT IGNORE INTO customer (id, account_id, customer_tax_id, company_name, billing_address, ship_to_address, self_billing_indicator, master_files_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            let inserts = [c.CustomerID._text, c.AccountID._text, c.CustomerTaxID._text, c.CompanyName._text, baID, saID, c.SelfBillingIndicator._text, MastersFilesDefaultID];
+            let sql = "INSERT INTO customer (id, account_id, customer_tax_id, company_name, billing_address, ship_to_address, self_billing_indicator, master_files_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            let inserts = [c.CustomerID._text, AccountID, c.CustomerTaxID._text, c.CompanyName._text, baID, saID, c.SelfBillingIndicator._text, MastersFilesDefaultID];
             sql = mysql.format(sql, inserts);
-            console.log(sql);
             con.query(sql, function (err, result) {
-                if (err) throw err;
+                if (err) {
+                    console.log(sql);
+                    throw err;}
                 resolve(true);
             });
         });

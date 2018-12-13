@@ -54,7 +54,7 @@ CREATE TABLE `address` (
   `country` enum('AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AS','AT','AU','AW','AX','AZ','BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS','BT','BV','BW','BY','BZ','CA','CC','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO','CR','CU','CV','CW','CX','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER','ES','ET','FI','FJ','FK','FM','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL','GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HM','HN','HR','HT','HU','ID','IE','IL','IM','IN','IO','IQ','IR','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI','KM','KN','KP','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV','LY','MA','MC','MD','ME','MF','MG','MH','MK','ML','MM','MN','MO','MP','MQ','MR','MS','MT','MU','MV','MW','MX','MY','MZ','NA','NC','NE','NF','NG','NI','NL','NO','NP','NR','NU','NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PW','PY','QA','RE','RO','RS','RU','RW','SA','SB','SC','SD','SE','SG','SH','SI','SJ','SK','SL','SM','SN','SO','SR','SS','ST','SV','SX','SY','SZ','TC','TD','TF','TG','TH','TJ','TK','TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','UM','US','UY','UZ','VA','VC','VE','VG','VI','VN','VU','WF','WS','XK','YE','YT','ZA','ZM','ZW','Desconhecido') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `pk` (`address_detail`,`city`,`postal_code`,`country`)
-) ENGINE=InnoDB AUTO_INCREMENT=241 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36123 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `credit_line` (
   KEY `account_id_:fk_idx` (`account_id`),
   CONSTRAINT `credit_line_account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
   CONSTRAINT `credit_line_transaction_id_fk` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=580 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3860 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,8 +90,8 @@ DROP TABLE IF EXISTS `customer`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `customer` (
   `id` varchar(45) NOT NULL,
-  `account_id` varchar(30) NOT NULL,
-  `customer_tax_id` int(11) NOT NULL,
+  `account_id` varchar(30) DEFAULT NULL,
+  `customer_tax_id` varchar(30) NOT NULL,
   `company_name` text NOT NULL,
   `billing_address` int(11) NOT NULL,
   `ship_to_address` int(11) NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE `debit_line` (
   KEY `debit_line_account_id_idx` (`account_id`),
   CONSTRAINT `debit_line_account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
   CONSTRAINT `debit_line_transaction_id_fk` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=513 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3411 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,7 +226,10 @@ DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `invoice_number` varchar(45) NOT NULL,
   `atcud` varchar(45) DEFAULT NULL,
-  `document_status_id` int(11) DEFAULT NULL,
+  `ds_invoice_status` varchar(45) DEFAULT NULL,
+  `ds_invoice_status_date` datetime DEFAULT NULL,
+  `ds_source_billing` varchar(45) DEFAULT NULL,
+  `ds_source_id` varchar(45) DEFAULT NULL,
   `hash` text,
   `hash_control` tinyint(4) DEFAULT NULL,
   `period` int(11) DEFAULT NULL,
@@ -245,14 +248,12 @@ CREATE TABLE `invoice` (
   `whithholding_tax_ammount` double DEFAULT NULL,
   `sales_invoices_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`invoice_number`),
-  KEY `ship_from_idx` (`ship_from_id`),
-  KEY `ship_to_idx` (`ship_to_id`),
-  KEY `invoice_document_status_id_fk_idx` (`document_status_id`),
   KEY `invoice_customer_id_fk_idx` (`customer_id`),
   KEY `invoice_transaction_id_fk_idx` (`transaction_id`),
   KEY `invoice_sales_invoices_id_fk_idx` (`sales_invoices_id`),
+  KEY `invoice_ship_to_id_fk_idx` (`ship_to_id`),
+  KEY `invoice_ship_from_id_fk_idx` (`ship_from_id`),
   CONSTRAINT `invoice_customer_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
-  CONSTRAINT `invoice_document_status_id_fk` FOREIGN KEY (`document_status_id`) REFERENCES `document_status` (`id`),
   CONSTRAINT `invoice_sales_invoices_id_fk` FOREIGN KEY (`sales_invoices_id`) REFERENCES `sales_invoices` (`id`),
   CONSTRAINT `invoice_ship_from_id_fk` FOREIGN KEY (`ship_from_id`) REFERENCES `ship_from` (`id`),
   CONSTRAINT `invoice_ship_to_id_fk` FOREIGN KEY (`ship_to_id`) REFERENCES `ship_to` (`id`),
@@ -388,13 +389,13 @@ DROP TABLE IF EXISTS `ship_from`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `ship_from` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `delivery_date` date NOT NULL,
   `address_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `adress_id_idx` (`address_id`),
   CONSTRAINT `ship_from_address_id_fk` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6242 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -405,13 +406,13 @@ DROP TABLE IF EXISTS `ship_to`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `ship_to` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `delivery_date` date NOT NULL,
   `address_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `adress_id_idx` (`address_id`),
   CONSTRAINT `ship_to_address_id_fk` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5558 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,7 +425,10 @@ DROP TABLE IF EXISTS `stock_movement`;
 CREATE TABLE `stock_movement` (
   `document_number` varchar(45) NOT NULL,
   `atcud` int(11) NOT NULL,
-  `document_status_id` int(11) NOT NULL,
+  `ds_movement_status` varchar(45) NOT NULL,
+  `ds_movement_status_date` datetime NOT NULL,
+  `ds_source_id` varchar(45) NOT NULL,
+  `ds_source_billing` varchar(45) NOT NULL,
   `hash` text NOT NULL,
   `hash_control` int(11) NOT NULL,
   `period` int(11) NOT NULL,
@@ -441,12 +445,10 @@ CREATE TABLE `stock_movement` (
   `document_totals_net_total` double NOT NULL,
   `document_totals_gross_total` double NOT NULL,
   PRIMARY KEY (`document_number`),
-  KEY `document_status_id_fk_idx` (`document_status_id`),
-  KEY `ship_to_id_fk_idx` (`ship_to_id`),
-  KEY `ship_from_id_fk_idx` (`ship_from_id`),
   KEY `movement_of_goods_id_fk_idx` (`movement_of_goods_id`),
   KEY `stock_mov_customer_id_idx` (`customer_id`),
-  CONSTRAINT `document_status_id_fk` FOREIGN KEY (`document_status_id`) REFERENCES `document_status` (`id`),
+  KEY `ship_from_id_fk_idx` (`ship_from_id`),
+  KEY `ship_to_id_fk_idx` (`ship_to_id`),
   CONSTRAINT `movement_of_goods_id_fk` FOREIGN KEY (`movement_of_goods_id`) REFERENCES `movement_of_goods` (`id`),
   CONSTRAINT `ship_from_id_fk` FOREIGN KEY (`ship_from_id`) REFERENCES `ship_from` (`id`),
   CONSTRAINT `ship_to_id_fk` FOREIGN KEY (`ship_to_id`) REFERENCES `ship_to` (`id`),
@@ -518,7 +520,7 @@ CREATE TABLE `tax_table_entry` (
   PRIMARY KEY (`id`),
   KEY `tax_table_id_fk_idx` (`tax_table_id`),
   CONSTRAINT `tax_table_id_fk` FOREIGN KEY (`tax_table_id`) REFERENCES `tax_table` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=786 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2151 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -559,4 +561,4 @@ CREATE TABLE `transaction` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-12 16:03:27
+-- Dump completed on 2018-12-13  1:31:01

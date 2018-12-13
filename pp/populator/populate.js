@@ -96,13 +96,29 @@ function start() {
 				console.log("Accounts imported.");
 			
 				// insert customers
+				let customerPromises = [];
 				saft.AuditFile.MasterFiles.Customer.forEach(c => {
-					ins.customer(c);
+					customerPromises.push(ins.customer(c));
 				});
 
-				// insert suppliers
+				// insert suppliers 
 				saft.AuditFile.MasterFiles.Supplier.forEach(sup => {
 					ins.supplier(sup);
+				});
+
+				let journalPromises = [];
+				ins.generalLedgerEntries(saft.AuditFile.GeneralLedgerEntries).then(_ => {
+					saft.AuditFile.GeneralLedgerEntries.Journal.forEach(journal => {
+						journalPromises.push(ins.journal(journal));
+					})
+				});
+				
+				Promise.all(journalPromises.concat(customerPromises)).then(_ => {
+					ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
+						saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
+							ins.invoice(invoice);
+						});
+					});
 				});
 			})
 		});
@@ -123,19 +139,5 @@ function start() {
 		});
 	});
 
-	let journalPromises = [];
-	ins.generalLedgerEntries(saft.AuditFile.GeneralLedgerEntries).then(_ => {
-		saft.AuditFile.GeneralLedgerEntries.Journal.forEach(journal => {
-			journalPromises.push(ins.journal(journal));
-		})
-	});
-
-	Promise.all(journalPromises).then(_ => {
-		ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
-			saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
-				ins.invoice(invoice);
-			})
-		});
-	})
 
 }
