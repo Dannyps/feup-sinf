@@ -95,7 +95,7 @@ function start() {
 			});
 			Promise.all(accs).then(_ => { // all account are in place
 				console.log("Accounts imported.");
-			
+
 				// insert customers
 				let customerPromises = [];
 				saft.AuditFile.MasterFiles.Customer.forEach(c => {
@@ -113,8 +113,15 @@ function start() {
 						journalPromises.push(ins.journal(journal));
 					})
 				});
-				
-				Promise.all(journalPromises.concat(customerPromises)).then(_ => {
+
+				// insert products
+				let productPromises = [];
+				saft.AuditFile.MasterFiles.Product.forEach(product => {
+					productPromises.push(ins.product(product));
+				});
+
+
+				Promise.all(journalPromises.concat(customerPromises, productPromises)).then(_ => {
 					ins.salesInvoices(saft.AuditFile.SourceDocuments.SalesInvoices).then(_ => {
 						saft.AuditFile.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
 							ins.invoice(invoice);
@@ -130,10 +137,6 @@ function start() {
 			})
 		});
 
-		// insert products
-		saft.AuditFile.MasterFiles.Product.forEach(product => {
-			ins.product(product);
-		});
 
 		// insert tax table
 		let taxTableEntriesIDs = [];

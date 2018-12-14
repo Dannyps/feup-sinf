@@ -25,6 +25,16 @@ module.exports = function (i) {
                     console.log(sql);
                     throw err;
                 }
+                // insert each line
+                if (typeof i.Line !== 'undefined') {
+                    if (Array.isArray(i.Line)) {
+                        i.Line.forEach(line => {
+                            ins.line(line, i.InvoiceNo._text, null);
+                        });
+                    } else {
+                        ins.line(i.Line, i.InvoiceNo._text, null);
+                    }
+                }
                 resolve(true);
             });
         });;
