@@ -43,9 +43,32 @@
             }
         
     </script>
+
+    <script>
+        function fetchTotalStockValue() {
+          $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+            console.log(response);
+            var chartData = [];
+            var totalStock = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalStock += item.value;
+                chartData.push([item.month, item.value]);
+            }
+
+            var stockStr = totalStock + ' €';
+    
+            console.log(stockStr);
+    
+            document.getElementById("stockvalue").innerHTML = stockStr;
+        }, 'json');
+    
+        }
+    </script>
     
 </head>
 <body>
+    <button onclick="fetchTotalStockValue()">test3</button> 
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -149,7 +172,7 @@
                                     <h4 class="text-center" style="color: #3a5faf">Inventory Value</h4>
                                 </li>
                                 <li class="list-group-item">
-                                    <h3>231 635€</h3>
+                                    <h3 id="stockvalue"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>

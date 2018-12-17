@@ -95,6 +95,94 @@
     }
     </script>
 
+    <script>
+        function fetchTotalSales() {
+          $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+            console.log(response);
+            var chartData = [];
+            var totalSales2 = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalSales2 += item.value;
+                chartData.push([item.month, item.value]);
+            }
+
+            var salesStr = totalSales2 + ' €';
+    
+            console.log(salesStr);
+    
+            document.getElementById("totalSales2").innerHTML = salesStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchTotalExpenses() {
+          $.get('http://localhost:5000/api/purchases/volume', function(response) {
+            console.log(response);
+            var chartData = [];
+            var totalExpenses = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalExpenses += item.value;
+                chartData.push([item.year, item.value]);
+            }
+
+            var expensesStr = totalExpenses + ' €';
+    
+            console.log(expensesStr);
+    
+            document.getElementById("totalExpenses").innerHTML = expensesStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchTotalStockValue() {
+          $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+            console.log(response);
+            var chartData = [];
+            var totalStock = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalStock += item.value;
+                chartData.push([item.month, item.value]);
+            }
+
+            var stockStr = totalStock + ' €';
+    
+            console.log(stockStr);
+    
+            document.getElementById("totalStock").innerHTML = stockStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchCashBalance() {
+          $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+            console.log(response);
+            var chartData = [];
+            var cash = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                cash += item.value;
+                chartData.push([item.month, item.value]);
+            }
+
+            var cashStr = cash + ' €';
+    
+            console.log(cashStr);
+    
+            document.getElementById("cashbalance").innerHTML = cashStr;
+        }, 'json');
+    
+        }
+    </script>
+
 </head>
 
 <body>
@@ -125,7 +213,10 @@
     
     
     <div class="container">
-        <button onclick="testFetch()">Fetch</button>     
+        <button onclick="fetchTotalSales()">test</button> 
+        <button onclick="fetchTotalExpenses()">test2</button> 
+        <button onclick="fetchTotalStockValue()">test3</button> 
+        <button onclick="fetchCashBalance()">test4</button> 
         <div class="row">
             <div class="col-sm-12 col-md-10 col-md-offset-1">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -191,8 +282,8 @@
                                         <h4 class="text-center title" style="color: #3a5faf">Sales Overview</h4>
                                     </li>
                                     <li class="list-group-item" style="color: #333">
-                                        <h4 class="sub-title">Total Sales </h4>
-                                        <h3>154 175 €</h3>
+                                        <h4 class="sub-title">Total Sales (Yearly) </h4>
+                                        <h3 id="totalSales2"></h3>
                                     </li>
                                     <li class="list-group-item">
                                         <div id="linechart2"></div>
@@ -213,7 +304,7 @@
                                     </li>
                                     <li class="list-group-item" style="color: #333">
                                         <h4 class="sub-title">Total Supplier Expenses </h4>
-                                        <h3>87 000 €</h3>
+                                        <h3 id="totalExpenses"></h3>
                                     </li>
                                     <li class="list-group-item">
                                         <div id="linechart3"></div>
@@ -235,7 +326,7 @@
                                     </li>
                                     <li class="list-group-item values" style="color: #333">
                                         <h4 class="sub-title">Total Stock Value </h4>
-                                        <h3>111 000 €</h3>
+                                        <h3 id="totalStock"></h3>
                                     </li>
                                     <li class="list-group-item">
                                         <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
@@ -261,7 +352,7 @@
                                     </li>
                                     <li class="list-group-item" style="color: #333">
                                         <h4 class="sub-title"> Cash balance </h4>
-                                        <h3>34 000 €</h3>
+                                        <h3 id="cashbalance"></h3>
                                     </li>
                                     <li class="list-group-item">
                                         <div id="linechart4"></div>

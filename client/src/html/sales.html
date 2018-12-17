@@ -92,9 +92,8 @@
             chartData.push([item.month, item.value]);
         }
 
-        console.log(totalSales);
-
-        document.getElementById('totalsales');
+        var salesStr = totalSales + ' €';
+        document.getElementById("sales").innerHTML = salesStr;
 
     }, 'json');
 
@@ -205,7 +204,7 @@
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Total Sales</h4>
-                                    <h3>154 175 €</h3>
+                                    <h3 id="sales"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Growth</h4>
