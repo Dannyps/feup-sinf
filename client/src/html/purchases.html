@@ -90,7 +90,6 @@
 
     <script>
         function fetchPurchasesBySupplier() {
-        console.log('entrou');
           $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
             console.log(response);
             var totalExpenses = 0;
@@ -100,7 +99,6 @@
             }
     
             console.log(totalExpenses);
-    
             document.getElementById('totalpurchases');
     
         }, 'json');

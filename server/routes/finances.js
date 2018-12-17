@@ -7,23 +7,23 @@ router.get('/equity', function(req, res, next) {
   var equity = [
     {
         'year': 2013,
-        'value': 11000
+        'value': 50000
     },
     {
         'year': 2014,
-        'value': 13000
+        'value': 60000
     },
     {
         'year': 2015,
-        'value': 10000
+        'value': 30000
     },
     {
         'year': 2016,
-        'value': 11000
+        'value': 25000
     },
     {
         'year': 2017,
-        'value': 12000
+        'value': 60000
     }
   ];
   res.json(equity);
@@ -36,23 +36,23 @@ router.get('/liability', function(req, res, next) {
   var liability = [
     {
         'year': 2013,
-        'value': 11000
+        'value': 25000
     },
     {
         'year': 2014,
-        'value': 13000
+        'value': 22000
     },
     {
         'year': 2015,
-        'value': 10000
+        'value': 28000
     },
     {
         'year': 2016,
-        'value': 11000
+        'value': 34000
     },
     {
         'year': 2017,
-        'value': 12000
+        'value': 17000
     }
   ];
   res.json(liability);
@@ -64,15 +64,15 @@ router.get('/assets', function(req, res, next) {
   var assets = [
     {
         'year': 2013,
-        'value': 11000
+        'value': 22000
     },
     {
         'year': 2014,
-        'value': 13000
+        'value': 33000
     },
     {
         'year': 2015,
-        'value': 10000
+        'value': 18000
     },
     {
         'year': 2016,

@@ -99,18 +99,13 @@
         function fetchTotalSales() {
           $.get('http://localhost:5000/api/sales/totalsales', function(response) {
             console.log(response);
-            var chartData = [];
             var totalSales2 = 0;
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
                 totalSales2 += item.value;
-                chartData.push([item.month, item.value]);
             }
-
             var salesStr = totalSales2 + ' €';
-    
             console.log(salesStr);
-    
             document.getElementById("totalSales2").innerHTML = salesStr;
         }, 'json');
     
@@ -121,18 +116,12 @@
         function fetchTotalExpenses() {
           $.get('http://localhost:5000/api/purchases/volume', function(response) {
             console.log(response);
-            var chartData = [];
             var totalExpenses = 0;
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
                 totalExpenses += item.value;
-                chartData.push([item.year, item.value]);
             }
-
             var expensesStr = totalExpenses + ' €';
-    
-            console.log(expensesStr);
-    
             document.getElementById("totalExpenses").innerHTML = expensesStr;
         }, 'json');
     
@@ -143,18 +132,12 @@
         function fetchTotalStockValue() {
           $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
             console.log(response);
-            var chartData = [];
             var totalStock = 0;
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
                 totalStock += item.value;
-                chartData.push([item.month, item.value]);
             }
-
             var stockStr = totalStock + ' €';
-    
-            console.log(stockStr);
-    
             document.getElementById("totalStock").innerHTML = stockStr;
         }, 'json');
     
@@ -165,18 +148,12 @@
         function fetchCashBalance() {
           $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
             console.log(response);
-            var chartData = [];
             var cash = 0;
             for(var idx = 0; idx < response.length; ++idx) {
                 var item = response[idx];
                 cash += item.value;
-                chartData.push([item.month, item.value]);
             }
-
             var cashStr = cash + ' €';
-    
-            console.log(cashStr);
-    
             document.getElementById("cashbalance").innerHTML = cashStr;
         }, 'json');
     

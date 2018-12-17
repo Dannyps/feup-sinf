@@ -39,9 +39,68 @@
         }, 'json');
     }
     </script>
+
+    <script>
+        function fetchEquity() {
+        $.get('http://localhost:5000/api/finances/equity', function(response) {
+            console.log(response);
+            var eq = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                eq += item.value;
+            }
+
+            var equityStr = eq + ' €';
+            document.getElementById("eq").innerHTML = equityStr;
+
+        }, 'json');
+
+        }
+    </script>
+
+    <script>
+        function fetchAssets() {
+        $.get('http://localhost:5000/api/finances/assets', function(response) {
+            console.log(response);
+            var assets = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                assets += item.value;
+            }
+
+            var assetsStr = assets + ' €';
+            document.getElementById("as").innerHTML = assetsStr;
+
+        }, 'json');
+
+        }
+    </script>
+
+    <script>
+        function fetchLiabilities() {
+        $.get('http://localhost:5000/api/finances/liability', function(response) {
+            console.log(response);
+            var lia = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                lia += item.value;
+            }
+
+            var liaStr = lia + ' €';
+            document.getElementById("lia").innerHTML = liaStr;
+
+        }, 'json');
+
+        }
+    </script>
     
 </head>
     <body>
+
+            <button onclick="fetchEquity()">test1</button> 
+            <button onclick="fetchLiabilities()">test2</button> 
+            <button onclick="fetchAssets()">test3</button> 
+
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -137,15 +196,15 @@
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Equity value</h4>
-                                    <h3>9 750€</h3>
+                                    <h3 id="eq"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Assets value</h4>
-                                    <h3>19 983€</h3>
+                                    <h3 id="as"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Liabilities value</h4>
-                                    <h3>10 233€</h3>
+                                    <h3 id="lia"></h3>
                                 </li>
                             </ul>
                         </div>
