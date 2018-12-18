@@ -1,45 +1,83 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-
-  var list = [
+/* GET purchases volume. */
+router.get('/volume', function(req, res, next) {
+  
+  var volume = [
     {
-      name: "list1",
-      description: "a simple example list"
+        'year': 2013,
+        'value': 11000
     },
     {
-      name: "list2",
-      description: "another example list"
+        'year': 2014,
+        'value': 13000
     },
     {
-      name: "list3",
-      description: "yet another"
+        'year': 2015,
+        'value': 10000
     },
-  ];
-  res.json(list);
-  console.log('Sent list of items');
+    {
+        'year': 2016,
+        'value': 11000
+    },
+    {
+        'year': 2017,
+        'value': 12000
+    }
+  ];  
+  res.json(volume);
 });
 
-router.get('/filter', function(req, res, next) {
+/* GET purchases by country listing. */
+router.get('/countrypurchases', function(req, res, next) {
+    var purchasesByCountry = [
+      {
+        country: "Germany",
+        purchases: 200
+      },
+      {
+        country: "United States",
+        purchases: 300
+      },
+      {
+        country: "Canada",
+        purchases: 300
+      },
+      {
+        country: "Portugal",
+        purchases: 400
+      },
+      {
+        country: "Russia",
+        purchases: 150
+      },
+      {
+        country: "Mexico",
+        purchases: 100
+      },
+    ];
+    res.json(purchasesByCountry);
+  });
 
-  var list = [
+/* GET total expenses for each supplier. */
+router.get('/suppliertotal', function(req, res, next) {
+
+  var supplierExpenses = [
     {
-      name: "list1",
-      description: "a simple example list"
+      'supplier': 'Customer A',
+      'value': 70000,
     },
     {
-      name: "list2",
-      description: "another example list"
+      'supplier': 'Customer B',
+      'value': 30000,
     },
     {
-      name: "list3",
-      description: "yet another"
+      'supplier': 'Customer C',
+      'value': 50000,
     },
   ];
-  res.json(list);
-  console.log('Sent list of items');
+  res.json(supplierExpenses);
 });
 
 module.exports = router;

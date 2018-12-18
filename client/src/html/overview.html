@@ -6,163 +6,163 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
     
-    <script src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
-        
-        google.charts.setOnLoadCallback(drawLineChart);
-        
-        google.charts.setOnLoadCallback(drawPieChart);
-        
-        google.charts.setOnLoadCallback(drawLineChart2);
-        
-        function drawLineChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Month', 'Sales'],
-            ['Jan',  2000],
-            ['Fev',  2000],
-            ['Mar',  3000]
-            ]);
-            
-            var options = {
-                title: 'Company Sales',
-                curveType: 'function',
-                legend: { position: 'bottom' },
-                vAxis: {minValue: 0}
-            };
-            
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-            
-            chart.draw(data, options);
-            
-        }
-        
-        function drawLineChart2() {
-            var data = google.visualization.arrayToDataTable([
-            ['Month', 'Sales'],
-            ['Jan',  -3000],
-            ['Fev',  -2000],
-            ['Mar',  200]
-            ]);
-            
-            var options = {
-                title: 'Financial Balance',
-                curveType: 'function',
-                legend: { position: 'bottom' },
-                
-            };
-            
-            var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
-            
-            chart.draw(data, options);
-            
-        }
-        
-        
-        function drawPieChart() {
-            
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
-            data.addRows([
-            ['A', 3],
-            ['B', 1],
-            ['C', 1]
-            ]);
-            
-            var options = {'title':'Best-seller products',
-            'width':400,
-            'height':300};
-            
-            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
-            
-        }
-        
-        
-        function drawColumnChart() {
-            
-            var data = new google.visualization.DataTable();
-            data.addColumn('time', 'Time');
-            data.addColumn('stock', 'Stock value');
-            
-            data.addRows([
-            [{v: [8, 0, 0], f: '8 am'}, 1],
-            [{v: [9, 0, 0], f: '9 am'}, 2],
-            [{v: [10, 0, 0], f:'10 am'}, 3],
-            [{v: [11, 0, 0], f: '11 am'}, 4],
-            [{v: [12, 0, 0], f: '12 pm'}, 5],
-            [{v: [13, 0, 0], f: '1 pm'}, 6],
-            [{v: [14, 0, 0], f: '2 pm'}, 7],
-            [{v: [15, 0, 0], f: '3 pm'}, 8],
-            [{v: [16, 0, 0], f: '4 pm'}, 9],
-            [{v: [17, 0, 0], f: '5 pm'}, 10],
-            ]);
-            
-            var options = {
-                title: 'Stock Value Over Time',
-                hAxis: {
-                    title: 'Time',
-                    format: 'h:mm a',
-                    viewWindow: {
-                        min: [7, 30, 0],
-                        max: [17, 30, 0]
-                    }
-                },
-                vAxis: {
-                    title: 'Rating (scale of 1-10)'
+        google.charts.setOnLoadCallback(drawTotalSalesChart);
+          
+        function drawTotalSalesChart() {
+            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.month, item.value]);
                 }
-            };
-            
-            var chart = new google.visualization.ColumnChart(
-            document.getElementById('column_div'));
-            
-            chart.draw(data, options);
+    
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Value (Euros)');
+                data.addRows(chartData);
+    
+                var options = {
+                    vAxis: {minValue: 0}
+                };
+    
+                //create and draw the chart from DIV
+                var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
+                chart.draw(data, options);
+            }, 'json');
         }
-        
-        
     </script>
+
+
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawSupplierExpensesChart);
         
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
-            ['2014',  1170,      460, 332, 102],
-            ['2015',  660,       1120, 400, 850],
-            ['2016',  1030,      540, 600, 910],
-            ['2017',  980,      830, 540, 1030],
-            ['2018',  1650,      1120, 730, 870]
-            ]);
-            
-            var options = {
-                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0},
-                legend: { position: 'bottom' }
-            };
-            
-            var chart = new google.visualization.AreaChart(document.getElementById('curve_chart_p'));
-            chart.draw(data, options);
-        }
-        function testFetch () {
-            $.getJSON({
-                url: 'http://localhost:5000/api/purchases',
-                success: (data) => {
-                    console.log(data);
-                },
-                error: (error) => {
-                    console.error();
-                    
+        function drawSupplierExpensesChart() {
+            $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.year, item.A, item.B, item.C]);
                 }
-            });
-        }
-
-    </script>
     
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Year');
+                data.addColumn('number', 'Supplier A');
+                data.addColumn('number', 'Supplier B');
+                data.addColumn('number', 'Supplier C');
+                data.addRows(chartData);
+    
+                var options = {
+                    vAxis: {minValue: 0}
+                };
+    
+                var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+                chart.draw(data, options);
+            }, 'json');
+        }
+    </script>
+
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawCashBalanceChart);
+    
+    function drawCashBalanceChart() {
+        $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+            console.log(response);
+            var chartData = [];
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                chartData.push([item.month, item.value]);
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Cash balance (Euros)');
+            data.addRows(chartData);
+
+            var options = {
+                vAxis: {minValue: 0}
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
+            chart.draw(data, options);
+        }, 'json');
+    }
+    </script>
+
+    <script>
+        function fetchTotalSales() {
+          $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+            console.log(response);
+            var totalSales2 = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalSales2 += item.value;
+            }
+            var salesStr = totalSales2 + ' €';
+            console.log(salesStr);
+            document.getElementById("totalSales2").innerHTML = salesStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchTotalExpenses() {
+          $.get('http://localhost:5000/api/purchases/volume', function(response) {
+            console.log(response);
+            var totalExpenses = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalExpenses += item.value;
+            }
+            var expensesStr = totalExpenses + ' €';
+            document.getElementById("totalExpenses").innerHTML = expensesStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchTotalStockValue() {
+          $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+            console.log(response);
+            var totalStock = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                totalStock += item.value;
+            }
+            var stockStr = totalStock + ' €';
+            document.getElementById("totalStock").innerHTML = stockStr;
+        }, 'json');
+    
+        }
+    </script>
+
+    <script>
+        function fetchCashBalance() {
+          $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+            console.log(response);
+            var cash = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                cash += item.value;
+            }
+            var cashStr = cash + ' €';
+            document.getElementById("cashbalance").innerHTML = cashStr;
+        }, 'json');
+    
+        }
+    </script>
+
 </head>
-<body>
+
+<body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance()">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -190,7 +190,6 @@
     
     
     <div class="container">
-        <button onclick="testFetch()">Fetch</button>
         <div class="row">
             <div class="col-sm-12 col-md-10 col-md-offset-1">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -256,11 +255,11 @@
                                         <h4 class="text-center title" style="color: #3a5faf">Sales Overview</h4>
                                     </li>
                                     <li class="list-group-item" style="color: #333">
-                                        <h4 class="sub-title">Total Sales </h4>
-                                        <h3>154 175 €</h3>
+                                        <h4 class="sub-title">Total Sales (Yearly) </h4>
+                                        <h3 id="totalSales2"></h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="curve_chart"></div>
+                                        <div id="linechart2"></div>
                                     </li>
                                 </ul>
                             </div>
@@ -278,10 +277,10 @@
                                     </li>
                                     <li class="list-group-item" style="color: #333">
                                         <h4 class="sub-title">Total Supplier Expenses </h4>
-                                        <h3>87 000 €</h3>
+                                        <h3 id="totalExpenses"></h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="curve_chart_p"></div>
+                                        <div id="linechart3"></div>
                                     </li>
                                 </ul>
                             </div>
@@ -300,7 +299,7 @@
                                     </li>
                                     <li class="list-group-item values" style="color: #333">
                                         <h4 class="sub-title">Total Stock Value </h4>
-                                        <h3>111 000 €</h3>
+                                        <h3 id="totalStock"></h3>
                                     </li>
                                     <li class="list-group-item">
                                         <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
@@ -326,10 +325,10 @@
                                     </li>
                                     <li class="list-group-item" style="color: #333">
                                         <h4 class="sub-title"> Cash balance </h4>
-                                        <h3>34 000 €</h3>
+                                        <h3 id="cashbalance"></h3>
                                     </li>
                                     <li class="list-group-item">
-                                        <div id="line_chart"></div>
+                                        <div id="linechart4"></div>
                                     </li>
                                 </ul>
                             </div>
@@ -344,5 +343,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="../javascript/dashboard.js"></script>
+<script src="../js/jquery.min.js"></script>
 </body>
 </html>

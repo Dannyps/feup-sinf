@@ -11,38 +11,91 @@
     <script type="text/javascript">
 
     google.charts.load('current', {'packages':['corechart']});
-
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
 
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'X');
-        data.addColumn('number', 'Equity');
-  
-        data.addRows([
-          [2013, 0],   [2014, 10],  [2015, 23],  [2016, 17],  [2017, 18],  [2018, 9]
-        ]);
-  
-        var options = {
-          hAxis: {
-            title: 'Year'
-          },
-          vAxis: {
-            title: 'Euros (thousands)'
-          },
-          legend: { position: 'bottom' }
-        };
-  
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
+        $.get('http://localhost:5000/api/finances/equity', function(response) {
+            console.log(response);
+            var chartData = [];
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                chartData.push([item.year, item.value]);
+            }
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Year');
+            data.addColumn('number', 'Equity value (Euros)');
+            data.addRows(chartData);
+
+            var options = {
+                vAxis: {minValue: 0}
+            };
+
+            //create and draw the chart from DIV
+            var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+            chart.draw(data, options);
+        }, 'json');
     }
     </script>
-    
+
+    <script>
+        function fetchEquity() {
+        $.get('http://localhost:5000/api/finances/equity', function(response) {
+            console.log(response);
+            var eq = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                eq += item.value;
+            }
+
+            var equityStr = eq + ' €';
+            document.getElementById("eq").innerHTML = equityStr;
+
+        }, 'json');
+
+        }
+    </script>
+
+    <script>
+        function fetchAssets() {
+        $.get('http://localhost:5000/api/finances/assets', function(response) {
+            console.log(response);
+            var assets = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                assets += item.value;
+            }
+
+            var assetsStr = assets + ' €';
+            document.getElementById("as").innerHTML = assetsStr;
+
+        }, 'json');
+
+        }
+    </script>
+
+    <script>
+        function fetchLiabilities() {
+        $.get('http://localhost:5000/api/finances/liability', function(response) {
+            console.log(response);
+            var lia = 0;
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                lia += item.value;
+            }
+
+            var liaStr = lia + ' €';
+            document.getElementById("lia").innerHTML = liaStr;
+
+        }, 'json');
+
+        }
+    </script>
     
 </head>
-<body>
-    
+<body onload="fetchEquity(),fetchLiabilities(),fetchAssets()">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -73,7 +126,6 @@
     </nav>
     
     <div class="container">
-        
         <div class="row">
             <div class="col-sm-12 col-md-10 col-md-offset-1">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -130,7 +182,6 @@
             <hr/>
             
             <div class="row">
-                
                 <div class="col-sm-12 col-md-3">
                     <div class="row text-center">
                         <div class="col-sm-12">
@@ -140,15 +191,15 @@
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Equity value</h4>
-                                    <h3>9 750€</h3>
+                                    <h3 id="eq"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Assets value</h4>
-                                    <h3>19 983€</h3>
+                                    <h3 id="as"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Final Liabilities value</h4>
-                                    <h3>10 233€</h3>
+                                    <h3 id="lia"></h3>
                                 </li>
                             </ul>
                         </div>
@@ -162,13 +213,11 @@
                             <h4 class="text-center" style="color: #3a5faf">Equity Change</h4>
                         </li>
                         <li class="list-group-item">
-                            <div id="chart_div" style="height: 220px;"></div>
+                            <div id="linechart" style="height: 250px;"></div>
                         </li>
                     </ul>
                 </div>
-                
             </div>
-            
         </div>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

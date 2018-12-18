@@ -8,58 +8,97 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawBestSellerProductsChart);
         
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-            ['Year', 'Product A', 'Product B', 'Product C', 'Product D'],
-            ['2014',  1170,      460, 332, 102],
-            ['2015',  660,       1120, 400, 850],
-            ['2016',  1030,      540, 600, 910],
-            ['2017',  980,      830, 540, 1030],
-            ['2018',  1650,      1120, 730, 870]
-            ]);
+        function drawBestSellerProductsChart() {
+        $.get('http://localhost:5000/api/sales/bestsellers', function(response) {
+            console.log(response);
+            var chartData = [];
+            for(var idx = 0; idx < response.length; ++idx) {
+                var item = response[idx];
+                chartData.push([item.year, item.A, item.B, item.C]);
+            }
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Year');
+            data.addColumn('number', 'Product A');
+            data.addColumn('number', 'Product B');
+            data.addColumn('number', 'Product C');
             
+            data.addRows(chartData);
+
             var options = {
-                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0},
-                legend: { position: 'bottom' }
+                title: 'Units sold of best-sellers'
             };
-            
-            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+
+            //create and draw the chart from DIV
+            var chart = new google.visualization.LineChart(document.getElementById('linechart'));
             chart.draw(data, options);
+        }, 'json');
         }
     </script>
+
+
     <script type="text/javascript">
       google.charts.load('current', {
         'packages':['geochart'],
-        // Note: you will need to get a mapsApiKey for your project.
-        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
         'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
       });
       google.charts.setOnLoadCallback(drawRegionsMap);
 
-      function drawRegionsMap() {
-        var data = google.visualization.arrayToDataTable([
-          ['Country', 'Sales (m€)'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Portugal', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 10]
-        ]);
 
-        var options = {};
+      function drawRegionsMap() {
+      $.get('http://localhost:5000/api/sales/countrysales', function(response) {
+        console.log(response);
+        var chartData = [];
+        for(var idx = 0; idx < response.length; ++idx) {
+            var item = response[idx];
+            chartData.push([item.country, item.sales]);
+        }
+        var data = new google.visualization.DataTable();
+
+        console.log(chartData);
+
+        data.addColumn('string','Country');
+        data.addColumn('number','Sales (Euros)');
+        data.addRows(chartData);
+
+        var options = {
+        };
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
         chart.draw(data, options);
-      }
+    }, 'json');
+
+    } 
+    
+    </script>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+
+    </script>
+
+    <script>
+    function fetchTotalSales() {
+      $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+        console.log(response);
+        var totalSales = 0;
+        for(var idx = 0; idx < response.length; ++idx) {
+            var item = response[idx];
+            totalSales += item.value;
+        }
+
+        var salesStr = totalSales + ' €';
+        document.getElementById("sales").innerHTML = salesStr;
+
+    }, 'json');
+
+    }
     </script>
     
 </head>
-<body>
+<body onload="fetchTotalSales()">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -161,7 +200,7 @@
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Total Sales</h4>
-                                    <h3>154 175 €</h3>
+                                    <h3 id="sales"></h3>
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="sub-title">Growth</h4>
@@ -178,7 +217,7 @@
                             <h4 class="text-center" style="color: #3a5faf">Best Selling</h4>
                         </li>
                         <li class="list-group-item">
-                            <div id="chart_div" style="height: 220px"></div>
+                            <div id="linechart" style="height: 300px"></div>
                         </li>
                     </ul>
                 </div>
