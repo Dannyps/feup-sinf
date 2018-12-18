@@ -65,15 +65,15 @@ router.get('/suppliertotal', function(req, res, next) {
 
   var supplierExpenses = [
     {
-      'supplier': 'Customer A',
+      'supplier': 'Supplier A',
       'value': 70000,
     },
     {
-      'supplier': 'Customer B',
+      'supplier': 'Supplier B',
       'value': 30000,
     },
     {
-      'supplier': 'Customer C',
+      'supplier': 'Supplier C',
       'value': 50000,
     },
   ];
