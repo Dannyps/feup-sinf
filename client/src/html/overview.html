@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Main Dashboard </title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css">
+    <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
+    
+    <script src="../js/jquery/jquery.min.js"></script>
+    <script src="../js/jquery/jquery-ui.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -31,6 +41,7 @@
     
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
+                $('#linechart2').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
@@ -62,6 +73,7 @@
                 };
     
                 var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+                $('#linechart3').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
@@ -90,6 +102,7 @@
             };
 
             var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
+            $('#linechart4').removeClass('loader');
             chart.draw(data, options);
         }, 'json');
     }
@@ -188,161 +201,116 @@
         </div>
     </nav>
     
-    
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-10 col-md-offset-1">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group dropdown">
-                        <button class="btn btn-timeFilter dropdown-toggle" type="button" data-toggle="dropdown">2017
-                            <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">2018</a></li>
-                                <li><a href="#">2017</a></li>
-                                <li><a href="#">2016</a></li>
-                                <li><a href="#">2015</a></li>
+        <div class="row" style="justify-content: space-between">
+            <div class="col-sm-12 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2">Start Date</span>
+                    <input type="text" class="form-control" placeholder="12/05/2017" aria-describedby="sizing-addon2" id="start_date">
+                    <span class="input-group-addon" id="sizing-addon2">End Date</span>
+                    <input type="text" class="form-control" placeholder="12/05/2018" aria-describedby="sizing-addon2" id="end_date">
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" id="filter_submit">Filter</button>
+        </div>
+        <hr/>
+        
+        <div class="row dashboard">
+            <a href="sales.html">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center title" style="color: #3a5faf">Sales Overview</h4>
+                                </li>
+                                <li class="list-group-item" style="color: #333">
+                                    <h4 class="sub-title">Total Sales </h4>
+                                    <h3 id="totalSales2"></h3>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="linechart2" class="loader"></div>
+                                </li>
                             </ul>
-                        </div>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-timeFilter active">
-                                <input type="radio" name="options" autocomplete="off" checked>None
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Jan
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Fev
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Mar
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Apr
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Jun
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Jul
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Aug
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Set
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Oct
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Nov
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Dec
-                            </label>
                         </div>
                     </div>
                 </div>
-            </div>
-            <hr/>
-            <div class="row dashboard">
-                <a href="sales.html">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="row text-center">
-                            <div class="col-sm-12">
-                                <ul class="list-group box-shadow">
-                                    <li class="list-group-item">
-                                        <h4 class="text-center title" style="color: #3a5faf">Sales Overview</h4>
-                                    </li>
-                                    <li class="list-group-item" style="color: #333">
-                                        <h4 class="sub-title">Total Sales (Yearly) </h4>
-                                        <h3 id="totalSales2"></h3>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div id="linechart2"></div>
-                                    </li>
-                                </ul>
-                            </div>
+            </a>
+            
+            <a href="purchases.html">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center title" style="color: #3a5faf">Purchases Overview</h4>
+                                </li>
+                                <li class="list-group-item" style="color: #333">
+                                    <h4 class="sub-title">Total Supplier Expenses </h4>
+                                    <h3 id="totalExpenses"></h3>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="linechart3" class="loader">
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </a>
-                
-                <a href="purchases.html">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="row text-center">
-                            <div class="col-sm-12">
-                                <ul class="list-group box-shadow">
-                                    <li class="list-group-item">
-                                        <h4 class="text-center title" style="color: #3a5faf">Purchases Overview</h4>
-                                    </li>
-                                    <li class="list-group-item" style="color: #333">
-                                        <h4 class="sub-title">Total Supplier Expenses </h4>
-                                        <h3 id="totalExpenses"></h3>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div id="linechart3"></div>
-                                    </li>
-                                </ul>
-                            </div>
+                </div>
+            </a>
+        </div>
+        <div class="row dashboard">
+            <a href="inventory.html">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center title" style="color: #3a5faf">Inventory Overview</h4>
+                                </li>
+                                <li class="list-group-item values" style="color: #333">
+                                    <h4 class="sub-title">Total Stock Value </h4>
+                                    <h3 id="totalStock"></h3>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-danger">Book A <span class="badge">3</span></li>
+                                        <li class="list-group-item list-group-item-warning">Book B <span class="badge">25</span></li>
+                                        <li class="list-group-item list-group-item-warning">Book C <span class="badge">47</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </a>
-            </div>
-            <div class="row dashboard">
-                <a href="inventory.html">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="row text-center">
-                            <div class="col-sm-12">
-                                <ul class="list-group box-shadow">
-                                    <li class="list-group-item">
-                                        <h4 class="text-center title" style="color: #3a5faf">Inventory Overview</h4>
-                                    </li>
-                                    <li class="list-group-item values" style="color: #333">
-                                        <h4 class="sub-title">Total Stock Value </h4>
-                                        <h3 id="totalStock"></h3>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
-                                        <ul class="list-group">
-                                            <li class="list-group-item list-group-item-danger">Book A <span class="badge">3</span></li>
-                                            <li class="list-group-item list-group-item-warning">Book B <span class="badge">25</span></li>
-                                            <li class="list-group-item list-group-item-warning">Book C <span class="badge">47</span></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
+                </div>
+            </a>
+            
+            <a href="finances.html">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
+                                </li>
+                                <li class="list-group-item" style="color: #333">
+                                    <h4 class="sub-title"> Cash balance </h4>
+                                    <h3 id="cashbalance"></h3>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="linechart4" class="loader"></div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </a>
-                
-                <a href="finances.html">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="row text-center">
-                            <div class="col-sm-12">
-                                <ul class="list-group box-shadow">
-                                    <li class="list-group-item">
-                                        <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
-                                    </li>
-                                    <li class="list-group-item" style="color: #333">
-                                        <h4 class="sub-title"> Cash balance </h4>
-                                        <h3 id="cashbalance"></h3>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div id="linechart4"></div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
+</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="../javascript/dashboard.js"></script>
-<script src="../js/jquery.min.js"></script>
+<script src="../js/jquery/datepicker.js"></script>
 </body>
 </html>
