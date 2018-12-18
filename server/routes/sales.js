@@ -3,33 +3,12 @@ var router = express.Router();
 
 /* GET sales by country listing. */
 router.get('/countrysales', function (req, res, next) {
-  var salesByCountry = [{
-      country: "Germany",
-      sales: 200
-    },
-    {
-      country: "United States",
-      sales: 300
-    },
-    {
-      country: "Spain",
-      sales: 300
-    },
-    {
-      country: "Portugal",
-      sales: 400
-    },
-    {
-      country: "Russia",
-      sales: 150
-    },
-    {
-      country: "Japan",
-      sales: 100
-    },
 
-  ];
-  res.json(salesByCountry);
+
+  var salesByCountry = con.query("SELECT country, SUM( document_totals_net_total) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {  
+    res.json(result);
+  });
+
 });
 
 router.get('/productsales', function (req, res, next) {
