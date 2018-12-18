@@ -192,13 +192,13 @@
             <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
                 <li class="list-group-item">
                     <div class="row">
-                        <h4 class="text-center col-md-9" style="color: #3a5faf">Best Selling</h4>
-                        <button type="button" id="bestSellingFilterBtn" class="btn btn-default col-md-2">
+                        <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases Volume</h4>
+                        <button type="button" id="purchasesVolumeFilterBtn" class="btn btn-default col-md-2">
                             <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
                         </button>
                     </div>
                 </li>
-                <li class="list-group-item" id="bestSellingFilterDiv" style="display:none">
+                <li class="list-group-item" id="purchasesVolumeDiv" style="display:none">
                     <fieldset class="row">
                         <div class="col">
 
@@ -228,7 +228,7 @@
                         
                         <div class="row">
 
-                            <button id="bestSellingFilter" type="submit" class="btn btn-default">filter</button>
+                            <button id="purchasesVolumeFilter" type="submit" class="btn btn-default">filter</button>
                         </div>
                     </fieldset>
                 </li>
@@ -246,7 +246,7 @@
                 <div class="col-sm-12">
                     <ul class="list-group box-shadow">
                         <li class="list-group-item">
-                            <h4 class="text-center" style="color: #3a5faf">Best Costumers</h4>
+                            <h4 class="text-center" style="color: #3a5faf">Best Products</h4>
                         </li>
                         <li class="list-group-item">
                             <table class="table">
@@ -286,12 +286,12 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases By Country</h4>
-                                <button type="button" id="bestCostumersFilterBtn" class="btn btn-default col-md-2">
+                                <button type="button" id="purchasesByCountryFilterBtn" class="btn btn-default col-md-2">
                                     <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
                                 </button>
                             </div>
                         </li>
-                        <li class="list-group-item" id="bestCostumersFilterDiv" style="display:none">
+                        <li class="list-group-item" id="purchasesByCountryFilterDiv" style="display:none">
                             <fieldset class="row">
                                 <div class="col">
 
@@ -321,7 +321,7 @@
 
                                 <div class="row">
 
-                                    <button id="bestCostumersFilter" type="submit" class="btn btn-default">filter</button>
+                                    <button id="purchasesByCountryFilter" type="submit" class="btn btn-default">filter</button>
                                 </div>
                             </fieldset>
                         </li>
@@ -347,12 +347,12 @@
             //loadBestSelling(false);
         });
 
-        $('#purchasesBtn').on('click', () => {
-            $('#purchasesDiv').toggle('slow');
+        $('#purchasesVolumeFilterBtn').on('click', () => {
+            $('#purchasesVolumeDiv').toggle('slow');
         });
 
-        $('#purchasesFilter').on('click', () => {
-            $('#purchasesDiv').hide('fast');
+        $('#purchasesVolumeFilter').on('click', () => {
+            $('#purchasesVolumeDiv').hide('fast');
             //loadBestSelling(false);
         });
 
