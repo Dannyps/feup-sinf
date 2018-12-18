@@ -7,8 +7,6 @@
  * @return {Promise}
  */
 module.exports = function (i) {
-    // let GroupingCode, TaxonomyCode;
-    // GroupingCode = (acc.GroupingCode == undefined ? null : acc.GroupingCode._text);
 
     addAddresses(i).then(addrIDs => {
         let stID = addrIDs[0];
