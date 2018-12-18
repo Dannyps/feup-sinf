@@ -91,22 +91,6 @@ router.get('/totalsales', function (req, res, next) {
       'month': 'Jan',
       'value': result[0].saldo
     }];
-
-
-    //   var totalSales = [
-    //     {
-    //         'month': 'Jan',
-    //         'value': 11000
-    //     },
-    //     {
-    //         'month': 'Fev',
-    //         'value': 13000
-    //     },
-    //     {
-    //         'month': 'Mar',
-    //         'value': 10000
-    //     },
-    // ];
     res.json(totalSales);
   });
 
