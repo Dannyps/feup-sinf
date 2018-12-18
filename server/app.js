@@ -4,12 +4,21 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var mysql = require('mysql');
 
 var indexRouter = require('./routes/index');
 var purchasesRouter = require('./routes/purchases');
 var salesRouter = require('./routes/sales');
 var financesRouter = require('./routes/finances');
 var inventoryRouter = require('./routes/inventory');
+
+global.con = mysql.createConnection({
+	host: "rr.dannyps.net",
+	user: "sinf",
+	password: "MJwaIGQCBwO3MWlj",
+	database: "sinf",
+	charset: "utf8"
+});
 
 var app = express();
 
