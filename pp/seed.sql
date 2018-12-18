@@ -105,7 +105,7 @@ CREATE TABLE `customer` (
   KEY `client_id_fk_idx` (`account_id`),
   CONSTRAINT `billing_adress_id` FOREIGN KEY (`billing_address`) REFERENCES `address` (`id`),
   CONSTRAINT `customer_master_files_id_fk` FOREIGN KEY (`master_files_id`) REFERENCES `master_files` (`id`),
-  --CONSTRAINT `customre_account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+  -- CONSTRAINT `customre_account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
   CONSTRAINT `ship_to_adress_id` FOREIGN KEY (`ship_to_address`) REFERENCES `address` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -310,7 +310,7 @@ CREATE TABLE `line` (
   KEY `line_invoice_id_fk_idx` (`invoice_id`),
   KEY `order_ref_originating_on_id_fk_idx` (`order_ref_originating_on`),
   CONSTRAINT `line_invoice_id_fk` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_number`),
-  --CONSTRAINT `line_product_code_id_fk` FOREIGN KEY (`product_code_id`) REFERENCES `product` (`product_code`),
+  -- CONSTRAINT `line_product_code_id_fk` FOREIGN KEY (`product_code_id`) REFERENCES `product` (`product_code`),
   CONSTRAINT `line_stock_movement_id_fk` FOREIGN KEY (`stock_movement_id`) REFERENCES `stock_movement` (`document_number`),
   CONSTRAINT `line_tax_id_fk` FOREIGN KEY (`tax_id`) REFERENCES `tax_table_entry` (`id`),
   CONSTRAINT `order_ref_originating_on_id_fk` FOREIGN KEY (`order_ref_originating_on`) REFERENCES `stock_movement` (`document_number`)
