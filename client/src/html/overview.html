@@ -36,7 +36,8 @@
                 data.addRows(chartData);
     
                 var options = {
-                    vAxis: {minValue: 0}
+                    vAxis: {minValue: 0},
+                    legend:'bottom',
                 };
     
                 //create and draw the chart from DIV
@@ -49,30 +50,28 @@
 
 
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawSupplierExpensesChart);
-        
         function drawSupplierExpensesChart() {
             $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
                 console.log(response);
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
-                    chartData.push([item.year, item.A, item.B, item.C]);
+                    console.log(item)
+                    chartData.push([item.supplier, item.value]);
                 }
     
                 var data = new google.visualization.DataTable();
-                data.addColumn('number', 'Year');
-                data.addColumn('number', 'Supplier A');
-                data.addColumn('number', 'Supplier B');
-                data.addColumn('number', 'Supplier C');
+                data.addColumn('string', 'Supplier');
+                data.addColumn('number', 'Volume');
                 data.addRows(chartData);
     
                 var options = {
-                    vAxis: {minValue: 0}
+                    vAxis: {minValue: 0},
+                    legend:'bottom',
                 };
     
-                var chart = new google.visualization.LineChart(document.getElementById('linechart3'));
+                var chart = new google.visualization.BarChart(document.getElementById('linechart3'));
                 $('#linechart3').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
@@ -80,9 +79,7 @@
     </script>
 
 <script type="text/javascript">
-    google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawCashBalanceChart);
-    
     function drawCashBalanceChart() {
         $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
             console.log(response);
@@ -98,7 +95,8 @@
             data.addRows(chartData);
 
             var options = {
-                vAxis: {minValue: 0}
+                vAxis: {minValue: 0},
+                legend:'bottom',
             };
 
             var chart = new google.visualization.LineChart(document.getElementById('linechart4'));

@@ -43,7 +43,8 @@
                 data.addRows(chartData);
 
                 var options = {
-                    vAxis: {minValue: 0}
+                    vAxis: {minValue: 0},
+                    'legend':'bottom',
                 };
 
                 //create and draw the chart from DIV
@@ -76,7 +77,7 @@
     </script>
     
 </head>
-<body onload="fetchTotalStockValue()">
+<body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -138,7 +139,7 @@
                                 <h4 class="text-center" style="color: #3a5faf">Inventory Value</h4>
                             </li>
                             <li class="list-group-item">
-                                <h3>231 635€</h3>
+                                <h3 id="stockvalue"></h3>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
@@ -229,6 +230,7 @@
                 $('#stockOverTimeDiv').hide('fast');
                 //loadBestSelling(false);
             });
+            fetchTotalStockValue();
         });
     </script>
 </body>

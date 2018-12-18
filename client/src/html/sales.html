@@ -40,7 +40,8 @@
             data.addRows(chartData);
 
             var options = {
-                title: 'Units sold of best-sellers'
+                title: 'Units sold of best-sellers',
+                legend: 'bottom'
             };
 
             //create and draw the chart from DIV
@@ -88,8 +89,6 @@
     } 
     
     </script>
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
 
     </script>
 
@@ -229,7 +228,7 @@
                         </fieldset>
                     </li>
                     <li class="list-group-item">
-                        <div id="chart_div" class="loader"></div>
+                        <div id="linechart" class="loader"></div>
                     </li>
                 </ul>
             </div>
