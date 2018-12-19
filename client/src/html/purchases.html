@@ -93,9 +93,6 @@
                 chart.draw(data, options);
             }, 'json');
         }
-    </script>
-    
-    <script>
         function fetchTotalPurchasesAndGrowth() {
             $.get('http://localhost:5000/api/purchases/volume', function(response) {
                 console.log(response);
@@ -114,20 +111,24 @@
             }, 'json');
             
         }
-    </script>
-    
-    <script>
+
         function fetchPurchasesBySupplier() {
             $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
-                console.log(response);
-                var totalExpenses = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
+                var items = [];
+                var maxLength = response.length < 5 ? response.length : 5;
+                for(var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
-                    totalExpenses += item.value;
+
+                    var list_item = $(`<tr>
+                                            <td>${item.supplier}</td>
+                                            <td><strong>${item.value} €</strong></td>
+                                        </tr>`);
+                    items.push(list_item);
                 }
-                
-                console.log(totalExpenses);
-                document.getElementById('totalpurchases');
+
+                items.forEach(e => {
+                    $('#best-suppliers').append(e);
+                });
                 
             }, 'json');
             
@@ -274,26 +275,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Sales</th>
+                                                <th>Purchases</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Continente</td>
-                                                <td>91 323 €</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Jerónimo Martins</td>
-                                                <td>32 340 €</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Costumer C</td>
-                                                <td>20 323 €</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Other</td>
-                                                <td>10 189 €</td>
-                                            </tr>
+                                        <tbody id="best-suppliers">
                                         </tbody>
                                     </table>
                                 </li>
@@ -377,6 +362,7 @@
         });
         
         fetchTotalPurchasesAndGrowth();
+        fetchPurchasesBySupplier();
         fetchInfo();
     });
 </script>

@@ -13,9 +13,9 @@ var financesRouter = require('./routes/finances');
 var inventoryRouter = require('./routes/inventory');
 
 global.con = mysql.createConnection({
-	host: "rr.dannyps.net",
+	host: "10.227.148.151",
 	user: "sinf",
-	password: "MJwaIGQCBwO3MWlj",
+	password: "fnis18",
 	database: "sinf",
 	charset: "utf8"
 });

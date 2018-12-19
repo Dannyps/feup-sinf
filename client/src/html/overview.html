@@ -54,7 +54,8 @@
         function drawSupplierExpensesChart() {
             $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                var maxLength = response.length < 3 ? response.length : 3;
+                for(var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
                     console.log(item)
                     chartData.push([item.supplier, item.value]);
@@ -162,7 +163,8 @@
         function fetchInventoryOverview() {
             $.get('http://localhost:5000/api/inventory/overview', function(response) {
                 var items = [];
-                for(var idx = 0; idx < 5; ++idx) {
+                var maxLength = response.length < 5 ? response.length : 5;
+                for(var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
                     var alertType = "";
 

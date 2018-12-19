@@ -148,7 +148,7 @@ router.get('/salesbycustomer', function (req, res, next) {
 
 /* GET best consumers. */
 router.get('/bestconsumers', function (req, res, next) {
-  let sql = "Select company_name as consumer,SUM(document_totals_net_total) as sales from sinf.invoice as i inner join sinf.customer as c on i.customer_id = c.id group by customer_id order by sales desc"
+  let sql = "Select company_name as consumer,round(SUM(document_totals_net_total), 2) as sales from sinf.invoice as i inner join sinf.customer as c on i.customer_id = c.id group by customer_id order by sales desc"
   con.query(sql, function (err, result) {
     console.log(result);
     res.json(result);

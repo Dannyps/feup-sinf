@@ -35,7 +35,7 @@ router.get('/countrypurchases', function (req, res, next) {
 /* GET total expenses for each supplier. */
 router.get('/suppliertotal', function (req, res, next) {
 
-  var salesByCountry = con.query("SELECT company_name AS supplier, sum(credit_amount) AS value FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id GROUP BY company_name ORDER BY value DESC", function (err, result) {
+  var salesByCountry = con.query("SELECT company_name AS supplier, round(sum(credit_amount),2) AS value FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id GROUP BY company_name ORDER BY value DESC", function (err, result) {
     res.json(result);
   });
 });

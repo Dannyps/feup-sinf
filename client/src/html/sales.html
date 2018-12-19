@@ -89,37 +89,51 @@
             
         } 
         
+        function fetchInfo() {
+            $.get('http://localhost:5000/api/info', function(response) {
+                console.log(response);
+                document.getElementById("year").innerHTML = response.fiscal_year;
+                document.getElementById("companyName").innerHTML = response.company_name;
+            }, 'json');
+            
+            
+        }
+        function fetchBestConsumers() {
+            $.get('http://localhost:5000/api/sales/bestconsumers', function(response) {
+                var items = [];
+                var maxLength = response.length < 5 ? response.length : 5;
+                for(var idx = 0; idx < maxLength; ++idx) {
+                    var item = response[idx];
+
+                    var list_item = $(`<tr>
+                                            <td>${item.consumer}</td>
+                                            <td><strong>${item.sales} €</strong></td>
+                                        </tr>`);
+                    items.push(list_item);
+                }
+
+                items.forEach(e => {
+                    $('#best-consumers').append(e);
+                });
+            }, 'json');
+        }
+        function fetchTotalSales() {
+            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+                console.log(response);
+                var totalSales = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalSales += item.value;
+                }
+                
+                var salesStr = totalSales + ' €';
+                document.getElementById("sales").innerHTML = salesStr;
+                
+            }, 'json');
+            
+        }
     </script>
     
-    <script>
-        function fetchInfo() {
-        $.get('http://localhost:5000/api/info', function(response) {
-            console.log(response);
-            document.getElementById("year").innerHTML = response.fiscal_year;
-            document.getElementById("companyName").innerHTML = response.company_name;
-        }, 'json');
-        
-    }
-    </script>
-
-<script>
-    function fetchTotalSales() {
-        $.get('http://localhost:5000/api/sales/totalsales', function(response) {
-            console.log(response);
-            var totalSales = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalSales += item.value;
-            }
-            
-            var salesStr = totalSales + ' €';
-            document.getElementById("sales").innerHTML = salesStr;
-            
-        }, 'json');
-        
-    }
-</script>
-
 </head>
 <body onload="fetchTotalSales()">
     <nav class="navbar navbar-default">
@@ -263,23 +277,8 @@
                                             <th>Sales</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Continente</td>
-                                            <td>91 323 €</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jerónimo Martins</td>
-                                            <td>32 340 €</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Costumer C</td>
-                                            <td>20 323 €</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Other</td>
-                                            <td>10 189 €</td>
-                                        </tr>
+                                    <tbody id="best-consumers">
+                                        
                                     </tbody>
                                 </table>
                             </li>
@@ -345,6 +344,7 @@
 <script>
     $(function() {
         fetchInfo();
+        fetchBestConsumers();
         $('#bestSellingFilterBtn').on('click', () => {
             $('#bestSellingFilterDiv').toggle('slow');
         });
