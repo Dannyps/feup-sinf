@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="../css/MonthPicker.css">
     
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
@@ -20,7 +21,7 @@
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawTotalSalesChart);
-          
+        
         function drawTotalSalesChart() {
             $.get('http://localhost:5000/api/sales/totalsales', function(response) {
                 console.log(response);
@@ -29,17 +30,17 @@
                     var item = response[idx];
                     chartData.push([item.month, item.value]);
                 }
-    
+                
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Month');
                 data.addColumn('number', 'Value (Euros)');
                 data.addRows(chartData);
-    
+                
                 var options = {
                     vAxis: {minValue: 0},
                     legend:'bottom',
                 };
-    
+                
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
                 $('#linechart2').removeClass('loader');
@@ -47,8 +48,8 @@
             }, 'json');
         }
     </script>
-
-
+    
+    
     <script type="text/javascript">
         google.charts.setOnLoadCallback(drawSupplierExpensesChart);
         function drawSupplierExpensesChart() {
@@ -60,117 +61,117 @@
                     console.log(item)
                     chartData.push([item.supplier, item.value]);
                 }
-    
+                
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Supplier');
                 data.addColumn('number', 'Volume');
                 data.addRows(chartData);
-    
+                
                 var options = {
                     vAxis: {minValue: 0},
                     legend:'bottom',
                 };
-    
+                
                 var chart = new google.visualization.BarChart(document.getElementById('linechart3'));
                 $('#linechart3').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
     </script>
-
-<script type="text/javascript">
-    google.charts.setOnLoadCallback(drawCashBalanceChart);
-    function drawCashBalanceChart() {
-        $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
-            console.log(response);
-            var chartData = [];
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                chartData.push([item.month, item.value]);
-            }
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Month');
-            data.addColumn('number', 'Cash balance (Euros)');
-            data.addRows(chartData);
-
-            var options = {
-                vAxis: {minValue: 0},
-                legend:'bottom',
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
-            $('#linechart4').removeClass('loader');
-            chart.draw(data, options);
-        }, 'json');
-    }
+    
+    <script type="text/javascript">
+        google.charts.setOnLoadCallback(drawCashBalanceChart);
+        function drawCashBalanceChart() {
+            $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.month, item.value]);
+                }
+                
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Cash balance (Euros)');
+                data.addRows(chartData);
+                
+                var options = {
+                    vAxis: {minValue: 0},
+                    legend:'bottom',
+                };
+                
+                var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
+                $('#linechart4').removeClass('loader');
+                chart.draw(data, options);
+            }, 'json');
+        }
     </script>
-
+    
     <script>
         function fetchTotalSales() {
-          $.get('http://localhost:5000/api/sales/totalsales', function(response) {
-            console.log(response);
-            var totalSales2 = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalSales2 += item.value;
-            }
-            var salesStr = totalSales2 + ' €';
-            console.log(salesStr);
-            document.getElementById("totalSales2").innerHTML = salesStr;
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+                console.log(response);
+                var totalSales2 = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalSales2 += item.value;
+                }
+                var salesStr = totalSales2 + ' €';
+                console.log(salesStr);
+                document.getElementById("totalSales2").innerHTML = salesStr;
+            }, 'json');
+            
         }
     </script>
-
+    
     <script>
         function fetchTotalExpenses() {
-          $.get('http://localhost:5000/api/purchases/volume', function(response) {
-            console.log(response);
-            var totalExpenses = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalExpenses += item.value;
-            }
-            var expensesStr = totalExpenses + ' €';
-            document.getElementById("totalExpenses").innerHTML = expensesStr;
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+                console.log(response);
+                var totalExpenses = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalExpenses += item.value;
+                }
+                var expensesStr = totalExpenses + ' €';
+                document.getElementById("totalExpenses").innerHTML = expensesStr;
+            }, 'json');
+            
         }
     </script>
-
+    
     <script>
         function fetchTotalStockValue() {
-          $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
-            console.log(response);
-            var totalStock = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalStock += item.value;
-            }
-            var stockStr = totalStock + ' €';
-            document.getElementById("totalStock").innerHTML = stockStr;
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+                console.log(response);
+                var totalStock = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalStock += item.value;
+                }
+                var stockStr = totalStock + ' €';
+                document.getElementById("totalStock").innerHTML = stockStr;
+            }, 'json');
+            
         }
     </script>
-
+    
     <script>
         function fetchCashBalance() {
-          $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
-            console.log(response);
-            var cash = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                cash += item.value;
-            }
-            var cashStr = cash + ' €';
-            document.getElementById("cashbalance").innerHTML = cashStr;
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+                console.log(response);
+                var cash = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    cash += item.value;
+                }
+                var cashStr = cash + ' €';
+                document.getElementById("cashbalance").innerHTML = cashStr;
+            }, 'json');
+            
         }
     </script>
-
+    
 </head>
 
 <body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance()">
@@ -200,16 +201,27 @@
     </nav>
     
     <div class="container">
-        <div class="row" style="justify-content: space-between">
-            <div class="col-sm-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2">Start Date</span>
-                    <input type="text" class="form-control" placeholder="12/05/2017" aria-describedby="sizing-addon2" id="start_date">
-                    <span class="input-group-addon" id="sizing-addon2">End Date</span>
-                    <input type="text" class="form-control" placeholder="12/05/2018" aria-describedby="sizing-addon2" id="end_date">
+        <div class="col">
+            <div class="row">
+                <h3>Analysing *year*</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="btn btn-primary fullwidth" id="filter_submit">Filter</button>
                 </div>
             </div>
-            <button type="button" class="btn btn-default" id="filter_submit">Filter</button>
         </div>
         <hr/>
         
@@ -309,6 +321,7 @@
 </div>
 </div>
 
-<script src="../js/jquery/datepicker.js"></script>
+<script src="../js/MonthPicker.js"></script>
+<script src="../js/datepicker.js"></script>
 </body>
 </html>

@@ -261,3 +261,11 @@ h4.sub-title {
     box-shadow: 0 2.5em 0 0;
   }
 }
+
+.btn-primary {
+    background-color: #3a5faf;
+}
+
+button.fullwidth {
+    width: 100%;
+}
