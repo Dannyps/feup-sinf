@@ -28,21 +28,25 @@
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
-                    chartData.push([item.year, item.A, item.B, item.C]);
+                    var args = [];
+                    for (key in item)
+                        args.push(item[key]);
+                    chartData.push(args);
                 }
                 
                 // Create the data table.
                 var data = new google.visualization.DataTable();
-                data.addColumn('number', 'Year');
-                data.addColumn('number', 'Product A');
-                data.addColumn('number', 'Product B');
-                data.addColumn('number', 'Product C');
+                let products = response[0];
+                for (key in item)
+                    data.addColumn('number', key); 
                 
                 data.addRows(chartData);
                 
                 var options = {
                     title: 'Units sold of best-sellers',
-                    legend: 'bottom'
+                    legend: 'bottom',
+                    hAxis: {minValue: 1, maxValue: 12,
+                    ticks: [1,2,3,4,5,6,7,8,9,10,11,12]}
                 };
                 
                 //create and draw the chart from DIV
