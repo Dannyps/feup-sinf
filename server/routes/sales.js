@@ -3,33 +3,12 @@ var router = express.Router();
 
 /* GET sales by country listing. */
 router.get('/countrysales', function (req, res, next) {
-  var salesByCountry = [{
-      country: "Germany",
-      sales: 200
-    },
-    {
-      country: "United States",
-      sales: 300
-    },
-    {
-      country: "Spain",
-      sales: 300
-    },
-    {
-      country: "Portugal",
-      sales: 400
-    },
-    {
-      country: "Russia",
-      sales: 150
-    },
-    {
-      country: "Japan",
-      sales: 100
-    },
 
-  ];
-  res.json(salesByCountry);
+
+  con.query("SELECT country, ROUND(SUM( document_totals_net_total),2) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {
+    res.json(result);
+  });
+
 });
 
 router.get('/productsales', function (req, res, next) {
@@ -86,27 +65,14 @@ router.get('/productsales', function (req, res, next) {
 
 router.get('/totalsales', function (req, res, next) {
 
-  con.query("SELECT total_credit-total_debit as saldo FROM sales_invoices", function (err, result) {
-    var totalSales = [{
-      'month': 'Jan',
-      'value': result[0].saldo
-    }];
-
-
-    //   var totalSales = [
-    //     {
-    //         'month': 'Jan',
-    //         'value': 11000
-    //     },
-    //     {
-    //         'month': 'Fev',
-    //         'value': 13000
-    //     },
-    //     {
-    //         'month': 'Mar',
-    //         'value': 10000
-    //     },
-    // ];
+  con.query("select MONTH(ds_invoice_status_date) as month, ROUND(sum(document_totals_net_total),2) as `value` from invoice group by month", function (err, result) {
+    var totalSales = [];
+    result.forEach(res => {
+      totalSales.push({
+        'month': months[res.month],
+        'value': res.value
+      })
+    });
     res.json(totalSales);
   });
 
@@ -169,6 +135,23 @@ router.get('/salesbycustomer', function (req, res, next) {
     },
   ];
   res.json(volume);
+
+});
+
+
+/* GET best consumers. */
+router.get('/bestconsumers', function (req, res, next) {
+  let sql = "SELECT account_description, sum(closing_debit_balance) - sum(closing_credit_balance) as balance FROM account\
+  WHERE  (id LIKE '2111%' /*nacional*/\
+  OR id LIKE '2112%') /*internacional*/\
+  AND id != '2111' AND id != '2112'\
+  group by account_description\
+  order by balance desc\
+  limit 4"
+  con.query(sql, function (err, result) {
+    console.log(result);
+    res.json(result);
+  });
 
 });
 

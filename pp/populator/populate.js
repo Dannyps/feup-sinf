@@ -84,6 +84,8 @@ function start() {
 	global.SalesInvoicesID = 1;
 	global.MovementGoodsID = 1;
 
+	ins.header(saft.AuditFile.Header);
+
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 
 		let accs = [];
@@ -129,9 +131,15 @@ function start() {
 					});
 
 					ins.movementOfGoods(saft.AuditFile.SourceDocuments.MovementOfGoods).then(_ => {
-						saft.AuditFile.SourceDocuments.MovementOfGoods.StockMovement.forEach(stockMovement => {
-							ins.stockMovement(stockMovement);
-						})
+						let stockMov = saft.AuditFile.SourceDocuments.MovementOfGoods.StockMovement;
+						if (Array.isArray(stockMov)) {
+							stockMov.forEach(stockMovement => {
+								ins.stockMovement(stockMovement);
+							})
+						} else {
+							ins.stockMovement(stockMov);
+						}
+
 					});
 				});
 			})
