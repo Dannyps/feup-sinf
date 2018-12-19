@@ -20,6 +20,24 @@ global.con = mysql.createConnection({
 	charset: "utf8"
 });
 
+global.months = {
+  1: 'Jan',
+  2: 'Fev',
+  3: 'Mar',
+  4: 'Apr',
+  5: 'May',
+  6: 'Jun',
+  7: 'Jul',
+  8: 'Aug',
+  9: 'Sep',
+  10: 'Oct',
+  11: 'Nov',
+  12: 'Dec'
+}
+
+var p = require('./primavera/primavera.js');
+global.primavera = new p;
+
 var app = express();
 
 app.use(cors());
