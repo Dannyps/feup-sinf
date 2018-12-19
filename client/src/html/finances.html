@@ -1,110 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Finances Dashboard </title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
-    
+    <link rel="stylesheet" href="../css/MonthPicker.css">
+
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-
-        $.get('http://localhost:5000/api/finances/equity', function(response) {
-            console.log(response);
-            var chartData = [];
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                chartData.push([item.year, item.value]);
-            }
-
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Year');
-            data.addColumn('number', 'Equity value (Euros)');
-            data.addRows(chartData);
-
-            var options = {
-                vAxis: {minValue: 0},
-                'legend':'bottom',
-            };
-
-            //create and draw the chart from DIV
-            var chart = new google.visualization.LineChart(document.getElementById('linechart'));
-            chart.draw(data, options);
-        }, 'json');
-    }
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawAccountsReceivable);
+        google.charts.setOnLoadCallback(drawAccountsPayable);
+        
+        function drawAccountsReceivable() {
+            $.get('http://localhost:5000/api/finances/accountsReceivable', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.client, item.value]);
+                }
+                
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Client');
+                data.addColumn('number', 'Money (Euros)');
+                data.addRows(chartData);
+                
+                var options = {
+                    // vAxis: {minValue: 5000},
+                    pieHole: 0.4,
+                    legend: 'bottom',
+                    pieSliceText: 'none',
+                };
+                
+                //create and draw the chart from DIV
+                var chart = new google.visualization.PieChart(document.getElementById('accounts_receivable'));
+                $('#accounts_receivable').removeClass('loader');
+                chart.draw(data, options);
+            }, 'json');
+        }
+        
+        function drawAccountsPayable() {
+            $.get('http://localhost:5000/api/finances/accountsPayable', function(response) {
+                console.log(response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.supplier, item.value]);
+                }
+                
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Supplier');
+                data.addColumn('number', 'Money (Euros)');
+                data.addRows(chartData);
+                
+                var options = {
+                    // vAxis: {minValue: 5000},
+                    pieHole: 0.4,
+                    legend: 'bottom',
+                    pieSliceText: 'none',
+                };
+                
+                //create and draw the chart from DIV
+                var chart = new google.visualization.PieChart(document.getElementById('accounts_payable'));
+                $('#accounts_payable').removeClass('loader');
+                chart.draw(data, options);
+            }, 'json');
+        }
     </script>
 
     <script>
-        function fetchEquity() {
-        $.get('http://localhost:5000/api/finances/equity', function(response) {
+        function fetchInfo() {
+        $.get('http://localhost:5000/api/info', function(response) {
             console.log(response);
-            var eq = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                eq += item.value;
-            }
-
-            var equityStr = eq + ' €';
-            document.getElementById("eq").innerHTML = equityStr;
-
+            document.getElementById("year").innerHTML = response.fiscal_year;
+            document.getElementById("companyName").innerHTML = response.company_name;
         }, 'json');
-
+        
+    }
+    </script>
+    
+    <script>
+        function fetchEquity() {
+            $('#lia').addClass('loader');
+            $.get('http://localhost:5000/api/finances/equity', function(response) {
+                console.log(response);
+                var eq = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    eq += item.value;
+                }
+                
+                var equityStr = eq + ' €';
+                document.getElementById("eq").innerHTML = equityStr;
+                $('#eq').removeClass('loader');
+                
+            }, 'json');
+            
         }
     </script>
 
     <script>
         function fetchAssets() {
-        $.get('http://localhost:5000/api/finances/assets', function(response) {
-            console.log(response);
-            var assets = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                assets += item.value;
-            }
-
-            var assetsStr = assets + ' €';
-            document.getElementById("as").innerHTML = assetsStr;
-
-        }, 'json');
-
+            $('#as').addClass('loader');
+            $.get('http://localhost:5000/api/finances/assets', function(response) {
+                console.log(response);
+                var assets = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    assets += item.value;
+                }
+                
+                var assetsStr = assets + ' €';
+                document.getElementById("as").innerHTML = assetsStr;
+                $('#as').removeClass('loader');
+                
+            }, 'json');
+            
         }
     </script>
 
     <script>
         function fetchLiabilities() {
-        $.get('http://localhost:5000/api/finances/liability', function(response) {
-            console.log(response);
-            var lia = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                lia += item.value;
-            }
-
-            var liaStr = lia + ' €';
-            document.getElementById("lia").innerHTML = liaStr;
-
-        }, 'json');
-
+            $('#lia').addClass('loader');
+            $.get('http://localhost:5000/api/finances/liability', function(response) {
+                console.log(response);
+                var lia = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    lia += item.value;
+                }
+                
+                var liaStr = lia + ' €';
+                document.getElementById("lia").innerHTML = liaStr;
+                $('#lia').removeClass('loader');
+                
+            }, 'json');
+            
         }
     </script>
-    
+
 </head>
+
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -134,120 +187,115 @@
             </ul>
         </div>
     </nav>
-    
+
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-10 col-md-offset-1">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group dropdown">
-                        <button class="btn btn-timeFilter dropdown-toggle" type="button" data-toggle="dropdown">2017
-                            <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">2017</a></li>
-                                <li><a href="#">2016</a></li>
-                                <li><a href="#">2015</a></li>
-                            </ul>
-                        </div>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-timeFilter active">
-                                <input type="radio" name="options" autocomplete="off" checked>None
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Jan
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Fev
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Mar
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Apr
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Jun
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Jul
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Aug
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Set
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Oct
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off" checked>Nov
-                            </label>
-                            <label class="btn btn-timeFilter">
-                                <input type="radio" name="options" autocomplete="off">Dec
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr/>
-            
+        <div class="col">
             <div class="row">
-                <div class="col-sm-12 col-md-3">
-                    <div class="row text-center">
-                        <div class="col-sm-12">
-                            <ul class="list-group box-shadow">
-                                <li class="list-group-item">
-                                    <h4 class="text-center" style="color: #3a5faf">Overview</h4>
-                                </li>
-                                <li class="list-group-item">
-                                    <h4 class="sub-title">Final Equity value</h4>
-                                    <h3 id="eq"></h3>
-                                </li>
-                                <li class="list-group-item">
-                                    <h4 class="sub-title">Final Assets value</h4>
-                                    <h3 id="as"></h3>
-                                </li>
-                                <li class="list-group-item">
-                                    <h4 class="sub-title">Final Liabilities value</h4>
-                                    <h3 id="lia"></h3>
-                                </li>
-                            </ul>
-                        </div>
+                <h3>Analysing <span id="year"></span></h3>
+                <h4 id="companyName"></h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
                     </div>
-                    <a href="#" style="display:block; text-align:center; color: #3a5faf">More details</a>
                 </div>
-                
-                <div class="col-sm-12 col-md-9">
-                    <ul class="list-group box-shadow">
-                        <li class="list-group-item">
-                            <h4 class="text-center" style="color: #3a5faf">Equity Change</h4>
-                        </li>
-                        <li class="list-group-item">
-                            <div id="linechart" style="height: 250px;"></div>
-                        </li>
-                    </ul>
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="btn btn-primary fullwidth" id="filter_submit">Filter</button>
                 </div>
             </div>
         </div>
-        
-        <script src="../js/jquery/datepicker.js"></script>
-        <script src="../js/jquery/jquery.zoomooz.min.js"></script>
-        <script>
-            $(function() {
-                $('#equityBtn').on('click', () => {
-                    $('#equityDiv').toggle('slow');
-                });
+        <hr />
 
-                $('#equityFilter').on('click', () => {
-                    $('#equityDiv').hide('fast');
-                    //loadBestSelling(false);
-                });
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <ul class="list-group box-shadow">
+                            <li class="list-group-item col">
+                                <h4 class="sub-title" style="color: #3a5faf">Final Equity value</h4>
+                                <h3 id="eq" class="loader"></h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <ul class="list-group box-shadow">
+                            <li class="list-group-item col">
+                                <h4 class="sub-title" style="color: #3a5faf">Final Assets Value</h4>
+                                <h3 id="as" class="loader"></h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <ul class="list-group box-shadow">
+                            <li class="list-group-item">
+                                <h4 class="sub-title" style="color: #3a5faf">Final Liabilities Value</h4>
+                                <h3 id="lia" class="loader"></h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group box-shadow zoomTarget" data-scalemode="width">
+                    <li class="list-group-item">
+                        <h4 class="text-center" style="color: #3a5faf">Accounts Receivable</h4>
+                    </li>
+                    <li class="list-group-item">
+                        <div id="accounts_receivable" class="loader" style="height: 300px"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group box-shadow zoomTarget" data-scalemode="width">
+                    <li class="list-group-item">
+                        <h4 class="text-center" style="color: #3a5faf">Accounts Payable</h4>
+                    </li>
+                    <li class="list-group-item">
+                        <div id="accounts_payable" class="loader" style="height:300px"></div>
+                    </li>
+                </ul>
+            </div>
 
-                fetchAssets();
-                fetchEquity();
-                fetchLiabilities();
+        </div>
+    </div>
+
+    <script src="../js/datepicker.js"></script>
+    <script src="../js/MonthPicker.js"></script>
+    <script src="../js/jquery/jquery.zoomooz.min.js"></script>
+    <script>
+        $(function () {
+            $('#equityBtn').on('click', () => {
+                $('#equityDiv').toggle('slow');
             });
-        </script>
-        
-    </body>
-    </html>
+
+            $('#equityFilter').on('click', () => {
+                $('#equityDiv').hide('fast');
+                //loadBestSelling(false);
+            });
+            
+            fetchAssets();
+            fetchEquity();
+            fetchLiabilities();
+            fetchInfo();
+        });
+    </script>
+
+</body>
+
+</html>

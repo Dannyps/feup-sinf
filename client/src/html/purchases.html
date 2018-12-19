@@ -5,22 +5,23 @@
     <title>Purchases Dashboard </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
-
+    <link rel="stylesheet" href="../css/MonthPicker.css">
+    
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
-
+        
         function drawChart() {
             $.get('http://localhost:5000/api/purchases/volume', function(response) {
                 console.log(response);
@@ -29,272 +30,202 @@
                     var item = response[idx];
                     chartData.push([item.year, item.value]);
                 }
-
+                
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('number', 'Year');
                 data.addColumn('number', 'Cash spent(Euros)');
                 data.addRows(chartData);
-
+                
                 var options = {
                     title: 'Purchases Volume',
                     vAxis: {minValue: 5000},
                     legend: 'bottom'
                 };
-
+                
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart'));
                 $('#linechart').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
-            }
+        }
     </script>
-    <script type="text/javascript">
-      google.charts.load('current', {
-        'packages':['geochart'],
-        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
-      });
-      google.charts.setOnLoadCallback(drawRegionsMap);
-
-      function drawRegionsMap() {
-        $.get('http://localhost:5000/api/purchases/countrypurchases', function(response) {
+    
+    <script>
+        function fetchInfo() {
+        $.get('http://localhost:5000/api/info', function(response) {
             console.log(response);
-            var chartData = [];
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                chartData.push([item.country, item.purchases]);
-            }
-            var data = new google.visualization.DataTable();
-    
-            data.addColumn('string','Country');
-            data.addColumn('number','Purchases (Euros)');
-            data.addRows(chartData);
-    
-            var options = {
-            };
-    
-            var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-            $('#regions_div').removeClass('loader');
-            chart.draw(data, options);
+            document.getElementById("year").innerHTML = response.fiscal_year;
+            document.getElementById("companyName").innerHTML = response.company_name;
         }, 'json');
-      }
+        
+    }
     </script>
 
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages':['geochart'],
+            'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        });
+        google.charts.setOnLoadCallback(drawRegionsMap);
+        
+        function drawRegionsMap() {
+            $.get('http://localhost:5000/api/purchases/countrypurchases', function(response) {
+                console.log('regions', response);
+                var chartData = [];
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    chartData.push([item.country, item.purchases]);
+                }
+                var data = new google.visualization.DataTable();
+                
+                data.addColumn('string','Country');
+                data.addColumn('number','Purchases (Euros)');
+                data.addRows(chartData);
+                
+                var options = {
+                };
+                
+                var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+                $('#regions_div').removeClass('loader');
+                chart.draw(data, options);
+            }, 'json');
+        }
+    </script>
+    
     <script>
         function fetchTotalPurchasesAndGrowth() {
-          $.get('http://localhost:5000/api/purchases/volume', function(response) {
-            console.log(response);
-            var totalPurchases = 0;
-            totalPurchases = response[response.length - 1].value;
-            console.log(totalPurchases);
-
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalPurchases += item.value;
-            }
-    
-            var purchasesStr = totalPurchases + ' €';
-            document.getElementById("pur").innerHTML = purchasesStr;
-    
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+                console.log(response);
+                var totalPurchases = 0;
+                totalPurchases = response[response.length - 1].value;
+                console.log(totalPurchases);
+                
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalPurchases += item.value;
+                }
+                
+                var purchasesStr = totalPurchases + ' €';
+                document.getElementById("pur").innerHTML = purchasesStr;
+                
+            }, 'json');
+            
         }
     </script>
-
+    
     <script>
         function fetchPurchasesBySupplier() {
-          $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
-            console.log(response);
-            var totalExpenses = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                totalExpenses += item.value;
-            }
-    
-            console.log(totalExpenses);
-            document.getElementById('totalpurchases');
-    
-        }, 'json');
-    
+            $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+                console.log(response);
+                var totalExpenses = 0;
+                for(var idx = 0; idx < response.length; ++idx) {
+                    var item = response[idx];
+                    totalExpenses += item.value;
+                }
+                
+                console.log(totalExpenses);
+                document.getElementById('totalpurchases');
+                
+            }, 'json');
+            
         }
     </script>
-
+    
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">360º Company Dashboard</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="overview.html">Dashboard</a>
-            </li>
-            <li>
-                <a href="sales.html">Sales</a>
-            </li>
-            <li class="active">
-                <a href="purchases.html">Purchases</a>
-            </li>
-            <li>
-                <a href="inventory.html">Inventory</a>
-            </li>
-            <li>
-                <a href="finances.html">Finances</a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="#"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
-            </li>
-            <li>
-                <a href="#"><span class="glyphicon glyphicon-log-in"></span>Login</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-addon" id="sizing-addon2">Start Date</span>
-                <input type="text" class="form-control" placeholder="12/05/2017" aria-describedby="sizing-addon2" id="start_date">
-                <span class="input-group-addon" id="sizing-addon2">End Date</span>
-                <input type="text" class="form-control" placeholder="12/05/2018" aria-describedby="sizing-addon2" id="end_date">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">360º Company Dashboard</a>
             </div>
-        </div>
-        <button type="button" class="btn btn-default" id="filter_submit">Filter</button>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <div class="row text-center">
-                <div class="col-sm-12">
-                    <ul class="list-group box-shadow">
-                        <li class="list-group-item">
-                            <h4 class="text-center" style="color: #3a5faf">Overview</h4>
-                        </li>
-                        <li class="list-group-item">
-                            <h4 class="sub-title">Total Purchases</h4>
-                            <h3 id="pur"></h3>
-                        </li>
-                        <li class="list-group-item">
-                            <h4 class="sub-title">Growth</h4>
-                            <h3>12.4 %</h3>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <a href="#" style="display:block; text-align:center; color: #3a5faf">More Details</a>
-        </div>
-        
-        <div class="col-sm-12 col-md-6">
-            <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
-                <li class="list-group-item">
-                    <div class="row">
-                        <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases Volume</h4>
-                        <button type="button" id="purchasesVolumeFilterBtn" class="btn btn-default col-md-2">
-                            <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
-                        </button>
-                    </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="overview.html">Dashboard</a>
                 </li>
-                <li class="list-group-item" id="purchasesVolumeDiv" style="display:none">
-                    <fieldset class="row">
-                        <div class="col">
-
-                            <label for="speed">Select a speed</label>
-                            <select name="speed" id="speed">
-                                <option>Slower</option>
-                                <option>Slow</option>
-                                <option selected="selected">Medium</option>
-                                <option>Fast</option>
-                                <option>Faster</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col">
-
-                            <label for="files">Select a file</label>
-                            <select name="files" id="files">
-                                <optgroup label="Scripts">
-                                    <option value="jquery">jQuery.js</option>
-                                    <option value="jqueryui">ui.jQuery.js</option>
-                                </optgroup>
-                                <optgroup label="Other files">
-                                    <option value="somefile">Some </option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        
-                        <div class="row">
-
-                            <button id="purchasesVolumeFilter" type="submit" class="btn btn-default">filter</button>
-                        </div>
-                    </fieldset>
+                <li>
+                    <a href="sales.html">Sales</a>
                 </li>
-                <li class="list-group-item">
-                    <div id="linechart" class="loader"></div>
+                <li class="active">
+                    <a href="purchases.html">Purchases</a>
+                </li>
+                <li>
+                    <a href="inventory.html">Inventory</a>
+                </li>
+                <li>
+                    <a href="finances.html">Finances</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
+                </li>
+                <li>
+                    <a href="#"><span class="glyphicon glyphicon-log-in"></span>Login</a>
                 </li>
             </ul>
         </div>
-    </div>
-    
-    <div class="row">
-        
-        <div class="col-sm-12 col-md-6">
+    </nav>
+    <div class="container">
+        <div class="col">
             <div class="row">
-                <div class="col-sm-12">
-                    <ul class="list-group box-shadow">
-                        <li class="list-group-item">
-                            <h4 class="text-center" style="color: #3a5faf">Best Products</h4>
-                        </li>
-                        <li class="list-group-item">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Sales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Continente</td>
-                                        <td>91 323 €</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jerónimo Martins</td>
-                                        <td>32 340 €</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Costumer C</td>
-                                        <td>20 323 €</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Other</td>
-                                        <td>10 189 €</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                    </ul>
+                <h3>Analysing <span id="year"></span></h3>
+                <h4 id="companyName"></h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="btn btn-primary fullwidth" id="filter_submit">Filter</button>
                 </div>
             </div>
-            <a href="#" style="display:block; text-align:center; color: #3a5faf">More Details</a>
         </div>
-        <div class="col-sm-12 col-md-6">
-                    <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestCostumersUl">
+        <hr>
+        <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center" style="color: #3a5faf">Overview</h4>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4 class="sub-title">Total Purchases</h4>
+                                    <h3 id="pur"></h3>
+                                </li>
+                                <li class="list-group-item">
+                                    <h4 class="sub-title">Growth</h4>
+                                    <h3>12.4 %</h3>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-12 col-md-6">
+                    <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
                         <li class="list-group-item">
                             <div class="row">
-                                <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases By Country</h4>
-                                <button type="button" id="purchasesByCountryFilterBtn" class="btn btn-default col-md-2">
+                                <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases Volume</h4>
+                                <button type="button" id="purchasesVolumeFilterBtn" class="btn btn-primary col-md-2">
                                     <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
                                 </button>
                             </div>
                         </li>
-                        <li class="list-group-item" id="purchasesByCountryFilterDiv" style="display:none">
+                        <li class="list-group-item" id="purchasesVolumeDiv" style="display:none">
                             <fieldset class="row">
                                 <div class="col">
-
+        
                                     <label for="speed">Select a speed</label>
                                     <select name="speed" id="speed">
                                         <option>Slower</option>
@@ -304,9 +235,9 @@
                                         <option>Faster</option>
                                     </select>
                                 </div>
-
+                                
                                 <div class="col">
-
+        
                                     <label for="files">Select a file</label>
                                     <select name="files" id="files">
                                         <optgroup label="Scripts">
@@ -318,30 +249,122 @@
                                         </optgroup>
                                     </select>
                                 </div>
-
+                                
                                 <div class="row">
-
-                                    <button id="purchasesByCountryFilter" type="submit" class="btn btn-default">filter</button>
+        
+                                    <button id="purchasesVolumeFilter" type="submit" class="btn btn-primary">filter</button>
                                 </div>
                             </fieldset>
                         </li>
                         <li class="list-group-item">
-                            <div id="regions_div" class="loader" style="height: 200px"></div>
+                            <div id="linechart" class="loader"></div>
                         </li>
                     </ul>
-            <a href="#" style="display:block; text-align:center; color: #3a5faf">More Details</a>
+                </div>
+            </div>
+            
+            <div class="row">
+                
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="list-group box-shadow">
+                                <li class="list-group-item">
+                                    <h4 class="text-center" style="color: #3a5faf">Best Products</h4>
+                                </li>
+                                <li class="list-group-item">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Sales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Continente</td>
+                                                <td>91 323 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jerónimo Martins</td>
+                                                <td>32 340 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Costumer C</td>
+                                                <td>20 323 €</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Other</td>
+                                                <td>10 189 €</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                            <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestCostumersUl">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases By Country</h4>
+                                        <button type="button" id="purchasesByCountryFilterBtn" class="btn btn-primary col-md-2">
+                                            <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" id="purchasesByCountryFilterDiv" style="display:none">
+                                    <fieldset class="row">
+                                        <div class="col">
+        
+                                            <label for="speed">Select a speed</label>
+                                            <select name="speed" id="speed">
+                                                <option>Slower</option>
+                                                <option>Slow</option>
+                                                <option selected="selected">Medium</option>
+                                                <option>Fast</option>
+                                                <option>Faster</option>
+                                            </select>
+                                        </div>
+        
+                                        <div class="col">
+        
+                                            <label for="files">Select a file</label>
+                                            <select name="files" id="files">
+                                                <optgroup label="Scripts">
+                                                    <option value="jquery">jQuery.js</option>
+                                                    <option value="jqueryui">ui.jQuery.js</option>
+                                                </optgroup>
+                                                <optgroup label="Other files">
+                                                    <option value="somefile">Some </option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+        
+                                        <div class="row">
+        
+                                            <button id="purchasesByCountryFilter" type="submit" class="btn btn-primary">filter</button>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                                <li class="list-group-item">
+                                    <div id="regions_div" class="loader" style="height: 200px"></div>
+                                </li>
+                            </ul>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-</div>
-<script src="../js/jquery/datepicker.js"></script>
+        </div>
+<script src="../js/MonthPicker.js"></script>
+<script src="../js/datepicker.js"></script>
 <script src="../js/jquery/jquery.zoomooz.min.js"></script>
 <script>
     $(function() {
         $('#purchasesByCountryFilterBtn').on('click', () => {
             $('#purchasesByCountryFilterDiv').toggle('slow');
         });
-
+        
         $('#purchasesByCountryFilter').on('click', () => {
             $('#purchasesByCountryFilterDiv').hide('fast');
             //loadBestSelling(false);
@@ -355,8 +378,9 @@
             $('#purchasesVolumeDiv').hide('fast');
             //loadBestSelling(false);
         });
-
+        
         fetchTotalPurchasesAndGrowth();
+        fetchInfo();
     });
 </script>
 </body>

@@ -84,6 +84,8 @@ function start() {
 	global.SalesInvoicesID = 1;
 	global.MovementGoodsID = 1;
 
+	ins.header(saft.AuditFile.Header);
+
 	ins.masterFilesId(MastersFilesDefaultID).then(_ => {
 
 		let accs = [];
