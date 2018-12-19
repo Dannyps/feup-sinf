@@ -142,51 +142,9 @@ router.get('/inventoryvalue', function (req, res, next) {
 
 router.get('/overview', function (req, res, next) {
 
-  // primavera.sqlQuery("SELECT TOP 5 Artigo, STKMinimo, STKMaximo, STKReposicao, STKActual, STKMinimo-STKActual as delta FROM Artigo WHERE STKMinimo > 0 ORDER BY delta DESC").then(data => {
-  //   res.json(data);
-  // });
-  res.json([
-    {
-    Artigo: "MAN001",
-    STKMinimo: 100,
-    STKMaximo: 0,
-    STKReposicao: 150,
-    STKActual: 0,
-    delta: 100
-    },
-    {
-    Artigo: "B0007",
-    STKMinimo: 20,
-    STKMaximo: 40,
-    STKReposicao: 28,
-    STKActual: 2,
-    delta: 18
-    },
-    {
-    Artigo: "B0008",
-    STKMinimo: 15,
-    STKMaximo: 25,
-    STKReposicao: 10,
-    STKActual: 0,
-    delta: 15
-    },
-    {
-    Artigo: "CMP-RAM001.DDR2-2048",
-    STKMinimo: 10,
-    STKMaximo: 0,
-    STKReposicao: 15,
-    STKActual: -5,
-    delta: 15
-    },
-    {
-    Artigo: "CMP-RAM001.DDR2-512",
-    STKMinimo: 10,
-    STKMaximo: 0,
-    STKReposicao: 15,
-    STKActual: -3,
-    delta: 13
-    }
-    ]);
+  primavera.sqlQuery("SELECT TOP 5 Artigo, STKMinimo, STKMaximo, STKReposicao, STKActual, STKMinimo-STKActual as delta FROM Artigo WHERE STKMinimo > 0 ORDER BY delta DESC").then(data => {
+    res.json(data);
+  });
 });
 
 
