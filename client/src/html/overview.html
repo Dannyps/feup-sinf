@@ -119,7 +119,7 @@
                     var item = response[idx];
                     totalSales2 += item.value;
                 }
-                var salesStr = totalSales2 + ' €';
+                var salesStr = totalSales2.toFixed(2) + ' €';
                 console.log(salesStr);
                 document.getElementById("totalSales2").innerHTML = salesStr;
             }, 'json');
@@ -141,7 +141,7 @@
                     var item = response[idx];
                     totalExpenses += item.value;
                 }
-                var expensesStr = totalExpenses + ' €';
+                var expensesStr = totalExpenses.toFixed(2) + ' €';
                 document.getElementById("totalExpenses").innerHTML = expensesStr;
             }, 'json');
 
@@ -154,7 +154,7 @@
                     var item = response[idx];
                     totalStock += item.value;
                 }
-                var stockStr = totalStock + ' €';
+                var stockStr = totalStock.toFixed(2) + ' €';
                 document.getElementById("totalStock").innerHTML = stockStr;
             }, 'json');
 

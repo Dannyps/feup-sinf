@@ -13,7 +13,7 @@ var financesRouter = require('./routes/finances');
 var inventoryRouter = require('./routes/inventory');
 
 global.con = mysql.createConnection({
-	host: "10.227.148.151",
+	host: "127.0.0.1",
 	user: "sinf",
 	password: "fnis18",
 	database: "sinf",

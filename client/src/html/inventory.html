@@ -40,7 +40,7 @@
                     chartData.push([item.month, item.value]);
                 }
 
-                var stockStr = totalStock + ' €';
+                var stockStr = totalStock.toFixed(2) + ' €';
                 document.getElementById("stockvalue").innerHTML = stockStr;
 
             }, 'json');

@@ -27,8 +27,8 @@
         });
         google.charts.setOnLoadCallback(drawChart);
 
-        function drawChart() {
-            $.get('http://localhost:5000/api/purchases/volume', function (response) {
+        function drawChart(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -89,8 +89,8 @@
         });
         google.charts.setOnLoadCallback(drawRegionsMap);
 
-        function drawRegionsMap() {
-            $.get('http://localhost:5000/api/purchases/countrypurchases', function (response) {
+        function drawRegionsMap(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/countrypurchases?m=' + min + '&M=' + max, function (response) {
                 console.log('regions', response);
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -111,45 +111,55 @@
             }, 'json');
         }
 
-        function fetchTotalPurchasesAndGrowth() {
-            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+        function fetchTotalPurchasesAndGrowth(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
                 var totalPurchases = 0;
                 totalPurchases = response[response.length - 1].value;
                 console.log(totalPurchases);
-                
-                for(var idx = 0; idx < response.length; ++idx) {
+
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     totalPurchases += item.value;
                 }
-                
-                var purchasesStr = totalPurchases + ' €';
+
+                var purchasesStr = totalPurchases.toFixed(2) + ' €';
                 document.getElementById("pur").innerHTML = purchasesStr;
-                
+
             }, 'json');
-            
+
         }
 
-        function fetchPurchasesBySupplier() {
-            $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+        function fetchPurchasesBySupplier(min = 1, max = 12) {
+            $('#best-suppliers').html("");
+            $.get('http://localhost:5000/api/purchases/suppliertotal?m=' + min + '&M=' + max, function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
-                for(var idx = 0; idx < maxLength; ++idx) {
+                for (var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
 
-                    var list_item = $(`<tr>
+                    var list_item = $(
+                        `<tr>
                                             <td>${item.supplier}</td>
                                             <td><strong>${item.value} €</strong></td>
-                                        </tr>`);
+                                        </tr>`
+                    );
                     items.push(list_item);
                 }
 
                 items.forEach(e => {
                     $('#best-suppliers').append(e);
                 });
-                
+
             }, 'json');
-            
+
+        }
+
+        function reload(min, max) {
+            fetchPurchasesBySupplier(min, max);
+            fetchTotalPurchasesAndGrowth(min, max);
+            drawChart(min, max);
+            drawRegionsMap(min, max);
         }
     </script>
 

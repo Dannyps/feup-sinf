@@ -1,16 +1,26 @@
-$(function() {
-    $("#start_date").MonthPicker({ StartYear: 2018, ShowIcon: false, SelectedMonth: 1, MonthFormat: 'MM'  });
-    
-    $("#end_date").MonthPicker({ StartYear: 2018, ShowIcon: false, SelectedMonth: 12, MonthFormat: 'MM'  });
+$(function () {
+    $("#start_date").MonthPicker({
+        StartYear: 2018,
+        ShowIcon: false,
+        SelectedMonth: 1,
+        MonthFormat: 'MM'
+    });
 
-    $('#start_date').MonthPicker('option', 'OnAfterChooseMonth', function(){ 
+    $("#end_date").MonthPicker({
+        StartYear: 2018,
+        ShowIcon: false,
+        SelectedMonth: 12,
+        MonthFormat: 'MM'
+    });
+
+    $('#start_date').MonthPicker('option', 'OnAfterChooseMonth', function () {
         var minMonth = $('#start_date').MonthPicker('GetSelectedMonth');
 
         $('#end_date').MonthPicker('option', 'SelectedMonth', minMonth + 1);
 
-     } );
+    });
 
-    $("#filter_submit").on('click', ()=> {
+    $("#filter_submit").on('click', () => {
         //getter
         var minMonth = $('#start_date').MonthPicker('GetSelectedMonth');
         var maxMonth = $('#end_date').MonthPicker('GetSelectedMonth');
