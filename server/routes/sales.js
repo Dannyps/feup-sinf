@@ -65,11 +65,14 @@ router.get('/productsales', function (req, res, next) {
 
 router.get('/totalsales', function (req, res, next) {
 
-  con.query("SELECT total_credit-total_debit as saldo FROM sales_invoices", function (err, result) {
-    var totalSales = [{
-      'month': 'Jan',
-      'value': result[0].saldo
-    }];
+  con.query("select MONTH(ds_invoice_status_date) as month, sum(document_totals_net_total) as `value` from invoice group by month", function (err, result) {
+    var totalSales = [];
+    result.forEach(res => {
+      totalSales.push({
+        'month': months[res.month],
+        'value': res.value
+      })
+    });
     res.json(totalSales);
   });
 
@@ -132,6 +135,23 @@ router.get('/salesbycustomer', function (req, res, next) {
     },
   ];
   res.json(volume);
+
+});
+
+
+/* GET best consumers. */
+router.get('/bestconsumers', function (req, res, next) {
+  let sql = "SELECT account_description, sum(closing_debit_balance) - sum(closing_credit_balance) as balance FROM account\
+  WHERE  (id LIKE '2111%' /*nacional*/\
+  OR id LIKE '2112%') /*internacional*/\
+  AND id != '2111' AND id != '2112'\
+  group by account_description\
+  order by balance desc\
+  limit 4"
+  con.query(sql, function (err, result) {
+    console.log(result);
+    res.json(result);
+  });
 
 });
 
