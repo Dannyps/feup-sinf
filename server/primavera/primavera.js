@@ -7,7 +7,7 @@ class Primavera {
         // set variables for class
         this.primaveraSecondToken;
         this.primaveraSecondTokenExpireTimestamp;
-        this.apiURL = "http://10.227.148.151:2018/WebApi/";
+        this.apiURL = "http://localhost:2018/WebApi/";
 
         // get token
 

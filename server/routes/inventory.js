@@ -124,20 +124,6 @@ router.get('/inventoryvalue', function (req, res, next) {
     }];
     res.json(totalSales);
   });
-  /*var inventoryValue = [{
-      'month': 'Jan',
-      'value': 5000,
-    },
-    {
-      'month': 'Feb',
-      'value': 6000,
-    },
-    {
-      'month': 'Mar',
-      'value': 5000,
-    },
-  ];
-  res.json(inventoryValue);*/
 });
 
 router.get('/overview', function (req, res, next) {

@@ -1,115 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Main Dashboard </title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="../css/MonthPicker.css">
-    
+
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         google.charts.setOnLoadCallback(drawTotalSalesChart);
-        
-        function drawTotalSalesChart() {
-            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+
+        function drawTotalSalesChart(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.month, item.value]);
                 }
-                
+
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Month');
                 data.addColumn('number', 'Value (Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
-                    vAxis: {minValue: 0},
-                    legend:'bottom',
+                    vAxis: {
+                        minValue: 0
+                    },
+                    legend: 'bottom',
                 };
-                
+
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
                 $('#linechart2').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
-    </script>
-    
-    
-    <script type="text/javascript">
+
         google.charts.setOnLoadCallback(drawSupplierExpensesChart);
-        function drawSupplierExpensesChart() {
-            $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
+
+        function drawSupplierExpensesChart(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/suppliertotal?m=' + min + '&M=' + max, function (response) {
                 var chartData = [];
                 var maxLength = response.length < 3 ? response.length : 3;
-                for(var idx = 0; idx < maxLength; ++idx) {
+                for (var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
                     console.log(item)
                     chartData.push([item.supplier, item.value]);
                 }
-                
+
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Supplier');
                 data.addColumn('number', 'Volume');
                 data.addRows(chartData);
-                
+
                 var options = {
-                    vAxis: {minValue: 0},
-                    legend:'bottom',
+                    vAxis: {
+                        minValue: 0
+                    },
+                    legend: 'bottom',
                 };
-                
+
                 var chart = new google.visualization.BarChart(document.getElementById('linechart3'));
                 $('#linechart3').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
-    </script>
-    
-    <script type="text/javascript">
+
         google.charts.setOnLoadCallback(drawCashBalanceChart);
+
         function drawCashBalanceChart() {
-            $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+            $.get('http://localhost:5000/api/finances/cashbalance', function (response) {
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.month, item.value]);
                 }
-                
+
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Month');
                 data.addColumn('number', 'Cash balance (Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
-                    vAxis: {minValue: 0},
-                    legend:'bottom',
+                    vAxis: {
+                        minValue: 0
+                    },
+                    legend: 'bottom',
                 };
-                
+
                 var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
                 $('#linechart4').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
-    </script>
-    
-    <script>
-        function fetchTotalSales() {
-            $.get('http://localhost:5000/api/sales/totalsales', function(response) {
+
+        function fetchTotalSales(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 var totalSales2 = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     totalSales2 += item.value;
                 }
@@ -117,54 +123,48 @@
                 console.log(salesStr);
                 document.getElementById("totalSales2").innerHTML = salesStr;
             }, 'json');
-            
-        }
-    </script>
 
-<script>
-    function fetchInfo() {
-        $.get('http://localhost:5000/api/info', function(response) {
-            document.getElementById("year").innerHTML = response.fiscal_year;
-            document.getElementById("companyName").innerHTML = response.company_name;
-        }, 'json');
-        
-    }
-</script>
-    
-    <script>
-        function fetchTotalExpenses() {
-            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+        }
+
+        function fetchInfo() {
+            $.get('http://localhost:5000/api/info', function (response) {
+                document.getElementById("year").innerHTML = response.fiscal_year;
+                document.getElementById("companyName").innerHTML = response.company_name;
+            }, 'json');
+
+        }
+
+        function fetchTotalExpenses(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
                 var totalExpenses = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     totalExpenses += item.value;
                 }
                 var expensesStr = totalExpenses + ' €';
                 document.getElementById("totalExpenses").innerHTML = expensesStr;
             }, 'json');
-            
+
         }
-    </script>
-    
-    <script>
+
         function fetchTotalStockValue() {
-            $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+            $.get('http://localhost:5000/api/inventory/inventoryvalue', function (response) {
                 var totalStock = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     totalStock += item.value;
                 }
                 var stockStr = totalStock + ' €';
                 document.getElementById("totalStock").innerHTML = stockStr;
             }, 'json');
-            
+
         }
 
         function fetchInventoryOverview() {
-            $.get('http://localhost:5000/api/inventory/overview', function(response) {
+            $.get('http://localhost:5000/api/inventory/overview', function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
-                for(var idx = 0; idx < maxLength; ++idx) {
+                for (var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
                     var alertType = "";
 
@@ -173,27 +173,36 @@
                     else if (item.delta > 15)
                         alertType = "list-group-item-warning";
 
-                    var list_item = $(`<li class="list-group-item ${alertType}">${item.Artigo}<span class="badge">${item.delta}</span></li>`);
+                    var list_item = $(
+                        `<li class="list-group-item ${alertType}">${item.Artigo}<span class="badge">${item.delta}</span></li>`
+                    );
                     items.push(list_item);
                 }
 
                 items.forEach(e => {
                     $('#inventory-overview').append(e);
                 });
-                
+
             }, 'json');
-            
+
         }
 
         function fetchCashBalance() {
-            $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
+            $.get('http://localhost:5000/api/finances/cashbalance', function (response) {
                 var cashStr = response + ' €';
                 document.getElementById("cashbalance").innerHTML = cashStr;
             }, 'json');
-            
+
+        }
+
+        function reload(min, max) {
+            fetchTotalSales(min, max);
+            fetchTotalExpenses(min, max);
+            drawSupplierExpensesChart(min, max);
+            drawTotalSalesChart(min, max);
         }
     </script>
-    
+
 </head>
 
 <body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance();fetchInfo();fetchInventoryOverview()">
@@ -220,11 +229,11 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span>   Admin</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
             </ul>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="col">
             <div class="row">
@@ -249,8 +258,8 @@
                 </div>
             </div>
         </div>
-        <hr/>
-        
+        <hr />
+
         <div class="row dashboard">
             <a href="sales.html">
                 <div class="col-sm-12 col-md-6">
@@ -262,7 +271,7 @@
                                 </li>
                                 <li class="list-group-item" style="color: #333">
                                     <h4 class="sub-title">Total Sales </h4>
-                                    <h5>(from SAFT)</h5>
+                                    <h5>(from SAF-T)</h5>
                                     <h3 id="totalSales2"></h3>
                                 </li>
                                 <li class="list-group-item">
@@ -273,7 +282,7 @@
                     </div>
                 </div>
             </a>
-            
+
             <a href="purchases.html">
                 <div class="col-sm-12 col-md-6">
                     <div class="row text-center">
@@ -284,7 +293,7 @@
                                 </li>
                                 <li class="list-group-item" style="color: #333">
                                     <h4 class="sub-title">Total Supplier Expenses </h4>
-                                    <h5>(from SAFT)</h5>
+                                    <h5>(from SAF-T)</h5>
                                     <h3 id="totalExpenses"></h3>
                                 </li>
                                 <li class="list-group-item">
@@ -305,10 +314,11 @@
                             <ul class="list-group box-shadow">
                                 <li class="list-group-item">
                                     <h4 class="text-center title" style="color: #3a5faf">Inventory Overview</h4>
+                                    <h6>(not affected by filtering)</h6>
                                 </li>
                                 <li class="list-group-item values" style="color: #333">
                                     <h4 class="sub-title">Total Stock Value </h4>
-                                    <h5>(from SAFT)</h5>
+                                    <h5>(from SAF-T)</h5>
                                     <h3 id="totalStock"></h3>
                                 </li>
                                 <li class="list-group-item">
@@ -322,7 +332,7 @@
                     </div>
                 </div>
             </a>
-            
+
             <a href="finances.html">
                 <div class="col-sm-12 col-md-6">
                     <div class="row text-center">
@@ -330,10 +340,11 @@
                             <ul class="list-group box-shadow">
                                 <li class="list-group-item">
                                     <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
+                                    <h6>(not affected by filtering)</h6>
                                 </li>
                                 <li class="list-group-item" style="color: #333">
-                                    <h5>(from SAFT)</h5>
                                     <h4 class="sub-title"> Cash balance </h4>
+                                    <h5>(from SAF-T)</h5>
                                     <h3 id="cashbalance"></h3>
                                 </li>
                             </ul>
@@ -343,10 +354,11 @@
             </a>
         </div>
     </div>
-</div>
-</div>
+    </div>
+    </div>
 
-<script src="../js/MonthPicker.js"></script>
-<script src="../js/datepicker.js"></script>
+    <script src="../js/MonthPicker.js"></script>
+    <script src="../js/datepicker.js"></script>
 </body>
+
 </html>

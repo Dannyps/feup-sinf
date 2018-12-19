@@ -17,58 +17,60 @@ router.get('/productsales', function (req, res, next) {
 
 
   var productSales = [{
-    'year': 2013,
-    'A': 120,
-    'B': 40,
-    'C': 50,
-    'D': 50,
-    'E': 60,
-    'F': 70,
-  },
-  {
-    'year': 2014,
-    'A': 110,
-    'B': 30,
-    'C': 80,
-    'D': 50,
-    'E': 60,
-    'F': 70,
-  },
-  {
-    'year': 2015,
-    'A': 70,
-    'B': 40,
-    'C': 50,
-    'D': 50,
-    'E': 60,
-    'F': 70,
-  },
-  {
-    'year': 2016,
-    'A': 110,
-    'B': 130,
-    'C': 90,
-    'D': 50,
-    'E': 60,
-    'F': 70,
-  },
-  {
-    'year': 2017,
-    'A': 110,
-    'B': 70,
-    'C': 60,
-    'D': 50,
-    'E': 60,
-    'F': 70,
-  }
+      'year': 2013,
+      'A': 120,
+      'B': 40,
+      'C': 50,
+      'D': 50,
+      'E': 60,
+      'F': 70,
+    },
+    {
+      'year': 2014,
+      'A': 110,
+      'B': 30,
+      'C': 80,
+      'D': 50,
+      'E': 60,
+      'F': 70,
+    },
+    {
+      'year': 2015,
+      'A': 70,
+      'B': 40,
+      'C': 50,
+      'D': 50,
+      'E': 60,
+      'F': 70,
+    },
+    {
+      'year': 2016,
+      'A': 110,
+      'B': 130,
+      'C': 90,
+      'D': 50,
+      'E': 60,
+      'F': 70,
+    },
+    {
+      'year': 2017,
+      'A': 110,
+      'B': 70,
+      'C': 60,
+      'D': 50,
+      'E': 60,
+      'F': 70,
+    }
   ];
   res.json(productSales);
 });
 
 
 router.get('/totalsales', function (req, res, next) {
-
-  con.query("select MONTH(ds_invoice_status_date) as month, ROUND(sum(document_totals_net_total),2) as `value` from invoice group by month", function (err, result) {
+  let min, max;
+  typeof req.query.m !== undefined ? min = req.query.m : min = 1;
+  typeof req.query.m !== undefined ? max = req.query.M : max = 12;
+  con.query("select MONTH(ds_invoice_status_date) as month, ROUND(sum(document_totals_net_total),2) as `value` from invoice where MONTH(ds_invoice_status_date) >= " + min + " and MONTH(ds_invoice_status_date) <= " + max + " group by month", function (err, result) {
     var totalSales = [];
     result.forEach(res => {
       totalSales.push({
@@ -102,13 +104,15 @@ router.get('/bestsellers', function (req, res, next) {
       var prodName = elem.product;
       var prodQuant = elem.quantity;
       var prodMonth = elem.month;
-      vol[prodMonth].push({ [prodName]: prodQuant });
+      vol[prodMonth].push({
+        [prodName]: prodQuant
+      });
 
       if (products.indexOf(prodName) === -1)
         products.push(prodName);
 
     });
-    
+
     let ret = [];
     vol.forEach((elem, index) => {
       if (elem != null) {
@@ -137,14 +141,16 @@ router.get('/bestsellers', function (req, res, next) {
           found = true;
           break;
         }
-      if (!found){
-        let missingLine={year: i};
-      products.forEach(product => {
-        missingLine[product] = 0;
-      }); 
-      ret.push(missingLine);
+      if (!found) {
+        let missingLine = {
+          year: i
+        };
+        products.forEach(product => {
+          missingLine[product] = 0;
+        });
+        ret.push(missingLine);
+      }
     }
-  }
 
     ret.sort(compareSellers);
     res.json(ret);
@@ -158,17 +164,17 @@ router.get('/bestsellers', function (req, res, next) {
 router.get('/salesbycustomer', function (req, res, next) {
 
   var salesByCustomer = [{
-    'customer': 'Customer A',
-    'value': 70000,
-  },
-  {
-    'customer': 'Customer B',
-    'value': 30000,
-  },
-  {
-    'customer': 'Customer C',
-    'value': 50000,
-  },
+      'customer': 'Customer A',
+      'value': 70000,
+    },
+    {
+      'customer': 'Customer B',
+      'value': 30000,
+    },
+    {
+      'customer': 'Customer C',
+      'value': 50000,
+    },
   ];
   res.json(volume);
 
@@ -186,10 +192,10 @@ router.get('/bestconsumers', function (req, res, next) {
 
 function compareSellers(a, b) {
   if (a.year < b.year)
-  return -1;
-if (a.year > b.year)
-  return 1;
-return 0;
+    return -1;
+  if (a.year > b.year)
+    return 1;
+  return 0;
 }
 
 

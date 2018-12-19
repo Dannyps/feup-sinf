@@ -5,19 +5,25 @@ var router = express.Router();
 /* GET purchases volume. */
 router.get('/volume', function (req, res, next) {
 
+  let min, max;
+  typeof req.query.m !== undefined ? min = req.query.m: min = 1;
+  typeof req.query.m !== undefined ? max = req.query.M: max = 12;
 
-  con.query("SELECT SUM(credit_amount) AS value, month(transaction_date) AS month FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id  INNER JOIN sinf.transaction AS t ON t.id = cl.transaction_id group by month(transaction_date)", function (err, result) {
+  con.query("SELECT round(SUM(credit_amount),2) AS value, month(transaction_date) AS month FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id  INNER JOIN sinf.transaction AS t ON t.id = cl.transaction_id WHERE month(transaction_date) <= " + max + " and month(transaction_date) >= " + min + " group by month(transaction_date)", function (err, result) {
     for (let i = 1; i <= 12; i++) {
       let isMember = false;
-      for (elem in result){
-        console.log(i + "  " + elem);
+      for (elem in result) {
+        //console.log(i + "  " + elem);
         if (result[elem].month == i) {
           isMember = true;
           break;
         }
       }
-      if(!isMember)  
-        result.push({"value":0,"month":i});
+      if (!isMember)
+        result.push({
+          "value": 0,
+          "month": i
+        });
     }
 
     result.sort(comparePurchases);
@@ -35,7 +41,7 @@ router.get('/countrypurchases', function (req, res, next) {
 
 
 router.get('/growth', function (req, res, next) {
-  con.query("SELECT SUM(credit_amount) AS value, month(transaction_date) AS month FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id  INNER JOIN sinf.transaction AS t ON t.id = cl.transaction_id group by month(transaction_date)", function (err, result) {   
+  con.query("SELECT SUM(credit_amount) AS value, month(transaction_date) AS month FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id  INNER JOIN sinf.transaction AS t ON t.id = cl.transaction_id group by month(transaction_date)", function (err, result) {
     res.json(result);
   });
 });
@@ -43,13 +49,16 @@ router.get('/growth', function (req, res, next) {
 /* GET total expenses for each supplier. */
 router.get('/suppliertotal', function (req, res, next) {
 
-  var salesByCountry = con.query("SELECT company_name AS supplier, round(sum(credit_amount),2) AS value FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id GROUP BY company_name ORDER BY value DESC", function (err, result) {
+  let min, max;
+  typeof req.query.m !== undefined ? min = req.query.m: min = 1;
+  typeof req.query.m !== undefined ? max = req.query.M: max = 12;
+  con.query("SELECT company_name AS supplier, round(sum(credit_amount),2) AS value FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id INNER JOIN transaction on cl.transaction_id = transaction.id WHERE month(transaction_date) <= " + max + " and month(transaction_date) >= " + min + " GROUP BY company_name ORDER BY value DESC", function (err, result) {
     res.json(result);
   });
 });
 
 
-function comparePurchases(a,b) {
+function comparePurchases(a, b) {
   if (a.month < b.month)
     return -1;
   if (a.month > b.month)

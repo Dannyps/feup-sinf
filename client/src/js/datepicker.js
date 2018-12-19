@@ -1,7 +1,7 @@
 $(function() {
-    $("#start_date").MonthPicker({ StartYear: 2019, ShowIcon: false, SelectedMonth: 1, MonthFormat: 'MM'  });
+    $("#start_date").MonthPicker({ StartYear: 2018, ShowIcon: false, SelectedMonth: 1, MonthFormat: 'MM'  });
     
-    $("#end_date").MonthPicker({ StartYear: 2019, ShowIcon: false, SelectedMonth: 12, MonthFormat: 'MM'  });
+    $("#end_date").MonthPicker({ StartYear: 2018, ShowIcon: false, SelectedMonth: 12, MonthFormat: 'MM'  });
 
     $('#start_date').MonthPicker('option', 'OnAfterChooseMonth', function(){ 
         var minMonth = $('#start_date').MonthPicker('GetSelectedMonth');
@@ -20,7 +20,6 @@ $(function() {
             return;
         }
 
-        console.log(minMonth);
-        console.log(maxMonth);
+        reload(minMonth, maxMonth); // implemented in the html
     });
 });
