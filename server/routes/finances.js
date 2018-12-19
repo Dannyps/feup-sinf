@@ -106,5 +106,47 @@ router.get('/cashbalance', function(req, res, next) {
     res.json(cashBalance);
   });
 
+  router.get('/accountsReceivable', function(req, res, next) {
+    
+    var accountsReceivable = [
+      {
+          'client': 'Client 1',
+          'value': 11000
+      },
+      {
+          'client': 'Client 2',
+          'value': 13000
+      },
+      {
+          'client': 'Client 3',
+          'value': 10000
+      },
+    ];
+    res.json(accountsReceivable);
+  });
+  
+  router.get('/accountsPayable', function(req, res, next) {
+    
+    var accountsReceivable = [
+      {
+          'supplier': 'Supplier 1',
+          'value': 4000
+      },
+      {
+          'supplier': 'Supplier 2',
+          'value': 15000
+      },
+      {
+          'supplier': 'Supplier 3',
+          'value': 23000
+      },
+      {
+          'supplier': 'Supplier 4',
+          'value': 9000
+      },
+    ];
+    res.json(accountsReceivable);
+  });
+
 
 module.exports = router;
