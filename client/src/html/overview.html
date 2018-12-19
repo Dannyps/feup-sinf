@@ -24,7 +24,6 @@
         
         function drawTotalSalesChart() {
             $.get('http://localhost:5000/api/sales/totalsales', function(response) {
-                console.log(response);
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -54,7 +53,6 @@
         google.charts.setOnLoadCallback(drawSupplierExpensesChart);
         function drawSupplierExpensesChart() {
             $.get('http://localhost:5000/api/purchases/suppliertotal', function(response) {
-                console.log(response);
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -83,7 +81,6 @@
         google.charts.setOnLoadCallback(drawCashBalanceChart);
         function drawCashBalanceChart() {
             $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
-                console.log(response);
                 var chartData = [];
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -110,7 +107,6 @@
     <script>
         function fetchTotalSales() {
             $.get('http://localhost:5000/api/sales/totalsales', function(response) {
-                console.log(response);
                 var totalSales2 = 0;
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -127,7 +123,6 @@
 <script>
     function fetchInfo() {
         $.get('http://localhost:5000/api/info', function(response) {
-            console.log(response);
             document.getElementById("year").innerHTML = response.fiscal_year;
             document.getElementById("companyName").innerHTML = response.company_name;
         }, 'json');
@@ -138,7 +133,6 @@
     <script>
         function fetchTotalExpenses() {
             $.get('http://localhost:5000/api/purchases/volume', function(response) {
-                console.log(response);
                 var totalExpenses = 0;
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -154,7 +148,6 @@
     <script>
         function fetchTotalStockValue() {
             $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
-                console.log(response);
                 var totalStock = 0;
                 for(var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -165,9 +158,31 @@
             }, 'json');
             
         }
-    </script>
-    
-    <script>
+
+        function fetchInventoryOverview() {
+            $.get('http://localhost:5000/api/inventory/overview', function(response) {
+                var items = [];
+                for(var idx = 0; idx < 5; ++idx) {
+                    var item = response[idx];
+                    var alertType = "";
+
+                    if (item.delta > 50)
+                        alertType = "list-group-item-danger";
+                    else if (item.delta > 15)
+                        alertType = "list-group-item-warning";
+
+                    var list_item = $(`<li class="list-group-item ${alertType}">${item.Artigo}<span class="badge">${item.delta}</span></li>`);
+                    items.push(list_item);
+                }
+
+                items.forEach(e => {
+                    $('#inventory-overview').append(e);
+                });
+                
+            }, 'json');
+            
+        }
+
         function fetchCashBalance() {
             $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
                 var cashStr = response + ' €';
@@ -179,11 +194,11 @@
     
 </head>
 
-<body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance();fetchInfo();">
+<body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance();fetchInfo();fetchInventoryOverview()">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">360º Company Dashboard</a>
+                <a class="navbar-brand" href="#">Última Venda</a>
             </div>
             <ul class="nav navbar-nav">
                 <li class="active">
@@ -201,6 +216,9 @@
                 <li>
                     <a href="finances.html">Finances</a>
                 </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span>   Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -294,10 +312,7 @@
                                 <li class="list-group-item">
                                     <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
                                     <h5>(from Primavera)</h5>
-                                    <ul class="list-group">
-                                        <li class="list-group-item list-group-item-danger">Book A <span class="badge">3</span></li>
-                                        <li class="list-group-item list-group-item-warning">Book B <span class="badge">25</span></li>
-                                        <li class="list-group-item list-group-item-warning">Book C <span class="badge">47</span></li>
+                                    <ul class="list-group" id="inventory-overview">
                                     </ul>
                                 </li>
                             </ul>
