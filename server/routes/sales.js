@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/countrysales', function (req, res, next) {
 
 
-  var salesByCountry = con.query("SELECT country, SUM( document_totals_net_total) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {  
+  var salesByCountry = con.query("SELECT country, SUM( document_totals_net_total) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {
     res.json(result);
   });
 
@@ -13,51 +13,54 @@ router.get('/countrysales', function (req, res, next) {
 
 router.get('/productsales', function (req, res, next) {
 
+
+
+
   var productSales = [{
-      'year': 2013,
-      'A': 120,
-      'B': 40,
-      'C': 50,
-      'D': 50,
-      'E': 60,
-      'F': 70,
-    },
-    {
-      'year': 2014,
-      'A': 110,
-      'B': 30,
-      'C': 80,
-      'D': 50,
-      'E': 60,
-      'F': 70,
-    },
-    {
-      'year': 2015,
-      'A': 70,
-      'B': 40,
-      'C': 50,
-      'D': 50,
-      'E': 60,
-      'F': 70,
-    },
-    {
-      'year': 2016,
-      'A': 110,
-      'B': 130,
-      'C': 90,
-      'D': 50,
-      'E': 60,
-      'F': 70,
-    },
-    {
-      'year': 2017,
-      'A': 110,
-      'B': 70,
-      'C': 60,
-      'D': 50,
-      'E': 60,
-      'F': 70,
-    }
+    'year': 2013,
+    'A': 120,
+    'B': 40,
+    'C': 50,
+    'D': 50,
+    'E': 60,
+    'F': 70,
+  },
+  {
+    'year': 2014,
+    'A': 110,
+    'B': 30,
+    'C': 80,
+    'D': 50,
+    'E': 60,
+    'F': 70,
+  },
+  {
+    'year': 2015,
+    'A': 70,
+    'B': 40,
+    'C': 50,
+    'D': 50,
+    'E': 60,
+    'F': 70,
+  },
+  {
+    'year': 2016,
+    'A': 110,
+    'B': 130,
+    'C': 90,
+    'D': 50,
+    'E': 60,
+    'F': 70,
+  },
+  {
+    'year': 2017,
+    'A': 110,
+    'B': 70,
+    'C': 60,
+    'D': 50,
+    'E': 60,
+    'F': 70,
+  }
   ];
   res.json(productSales);
 });
@@ -83,38 +86,42 @@ router.get('/totalsales', function (req, res, next) {
 /* GET purchases volume. */
 router.get('/bestsellers', function (req, res, next) {
 
-  var volume = [{
-      'year': 2013,
-      'A': 120,
-      'B': 40,
-      'C': 50,
-    },
-    {
-      'year': 2014,
-      'A': 110,
-      'B': 30,
-      'C': 80,
-    },
-    {
-      'year': 2015,
-      'A': 70,
-      'B': 40,
-      'C': 50,
-    },
-    {
-      'year': 2016,
-      'A': 110,
-      'B': 130,
-      'C': 90,
-    },
-    {
-      'year': 2017,
-      'A': 110,
-      'B': 70,
-      'C': 60,
-    }
-  ];
-  res.json(volume);
+  var salesByCountry = con.query("SELECT product_code_id AS product, quantity, MONTH(tax_point_date) AS month FROM sinf.line WHERE tax_point_date IS NOT NULL group by month(tax_point_date), product_code_id", function (err, result) {
+    var month = 'year';
+
+    let vol = [];
+    result.forEach(elem => {
+      if (vol[elem.month] === undefined) {
+        vol[elem.month] = [];
+      }
+    });
+    result.forEach(elem => {
+      var prodName = elem.product;
+      var prodQuant = elem.quantity;
+      var prodMonth = elem.month;
+      vol[prodMonth].push({ [prodName]: prodQuant });
+
+    });
+
+    let ret = [];
+    vol.forEach((elem, index) => {
+      if (elem != null) {
+        let aux = {};
+        aux[month] = index;
+        elem.forEach(line => {
+          let prodName = Object.keys(line)[0];
+          let prodQuant = line[prodName];
+          aux[prodName] = prodQuant;
+        });
+        ret.push(aux);
+      }
+
+    });
+
+    res.json(ret);
+  });
+
+
 
 });
 
@@ -122,17 +129,17 @@ router.get('/bestsellers', function (req, res, next) {
 router.get('/salesbycustomer', function (req, res, next) {
 
   var salesByCustomer = [{
-      'customer': 'Customer A',
-      'value': 70000,
-    },
-    {
-      'customer': 'Customer B',
-      'value': 30000,
-    },
-    {
-      'customer': 'Customer C',
-      'value': 50000,
-    },
+    'customer': 'Customer A',
+    'value': 70000,
+  },
+  {
+    'customer': 'Customer B',
+    'value': 30000,
+  },
+  {
+    'customer': 'Customer C',
+    'value': 50000,
+  },
   ];
   res.json(volume);
 
