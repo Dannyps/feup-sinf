@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/countrysales', function (req, res, next) {
 
 
-  var salesByCountry = con.query("SELECT country, SUM( document_totals_net_total) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {  
+  con.query("SELECT country, ROUND(SUM( document_totals_net_total),2) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {
     res.json(result);
   });
 
@@ -65,7 +65,7 @@ router.get('/productsales', function (req, res, next) {
 
 router.get('/totalsales', function (req, res, next) {
 
-  con.query("select MONTH(ds_invoice_status_date) as month, sum(document_totals_net_total) as `value` from invoice group by month", function (err, result) {
+  con.query("select MONTH(ds_invoice_status_date) as month, ROUND(sum(document_totals_net_total),2) as `value` from invoice group by month", function (err, result) {
     var totalSales = [];
     result.forEach(res => {
       totalSales.push({
