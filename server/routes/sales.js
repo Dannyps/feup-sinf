@@ -148,19 +148,11 @@ router.get('/salesbycustomer', function (req, res, next) {
 
 /* GET best consumers. */
 router.get('/bestconsumers', function (req, res, next) {
-  let sql = "SELECT account_description, sum(closing_debit_balance) - sum(closing_credit_balance) as balance FROM account\
-  WHERE  (id LIKE '2111%' /*nacional*/\
-  OR id LIKE '2112%') /*internacional*/\
-  AND id != '2111' AND id != '2112'\
-  group by account_description\
-  order by balance desc\
-  limit 4"
+  let sql = "Select company_name as consumer,SUM(document_totals_net_total) as sales from sinf.invoice as i inner join sinf.customer as c on i.customer_id = c.id group by customer_id order by sales desc"
   con.query(sql, function (err, result) {
     console.log(result);
     res.json(result);
   });
-
 });
-
 
 module.exports = router;
