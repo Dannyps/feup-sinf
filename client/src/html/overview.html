@@ -123,6 +123,17 @@
             
         }
     </script>
+
+<script>
+    function fetchInfo() {
+        $.get('http://localhost:5000/api/info', function(response) {
+            console.log(response);
+            document.getElementById("year").innerHTML = response.fiscal_year;
+            document.getElementById("companyName").innerHTML = response.company_name;
+        }, 'json');
+        
+    }
+</script>
     
     <script>
         function fetchTotalExpenses() {
@@ -159,13 +170,7 @@
     <script>
         function fetchCashBalance() {
             $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
-                console.log(response);
-                var cash = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
-                    var item = response[idx];
-                    cash += item.value;
-                }
-                var cashStr = cash + ' €';
+                var cashStr = response + ' €';
                 document.getElementById("cashbalance").innerHTML = cashStr;
             }, 'json');
             
@@ -174,7 +179,7 @@
     
 </head>
 
-<body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance()">
+<body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance();fetchInfo();">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -203,7 +208,8 @@
     <div class="container">
         <div class="col">
             <div class="row">
-                <h3>Analysing *year*</h3>
+                <h3>Analysing <span id="year"></span></h3>
+                <h4 id="companyName"></h4>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-5">

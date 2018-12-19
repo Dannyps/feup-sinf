@@ -1,54 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Finances Dashboard </title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="../css/MonthPicker.css">
-    
+
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         google.charts.setOnLoadCallback(drawChart);
-        
+
         function drawChart() {
-            
-            $.get('http://localhost:5000/api/finances/equity', function(response) {
+
+            $.get('http://localhost:5000/api/finances/equity', function (response) {
                 console.log(response);
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.year, item.value]);
                 }
-                
+
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('number', 'Year');
                 data.addColumn('number', 'Equity value (Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
-                    vAxis: {minValue: 0},
-                    'legend':'bottom',
+                    vAxis: {
+                        minValue: 0
+                    },
+                    'legend': 'bottom',
                 };
-                
+
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart'));
                 chart.draw(data, options);
             }, 'json');
         }
+    </script>
+
+    <script>
+        function fetchInfo() {
+        $.get('http://localhost:5000/api/info', function(response) {
+            console.log(response);
+            document.getElementById("year").innerHTML = response.fiscal_year;
+            document.getElementById("companyName").innerHTML = response.company_name;
+        }, 'json');
+        
+    }
     </script>
     
     <script>
@@ -70,7 +87,7 @@
             
         }
     </script>
-    
+
     <script>
         function fetchAssets() {
             $('#as').addClass('loader');
@@ -90,7 +107,7 @@
             
         }
     </script>
-    
+
     <script>
         function fetchLiabilities() {
             $('#lia').addClass('loader');
@@ -110,8 +127,9 @@
             
         }
     </script>
-    
+
 </head>
+
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -141,11 +159,12 @@
             </ul>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="col">
             <div class="row">
-                <h3>Analysing *year*</h3>
+                <h3>Analysing <span id="year"></span></h3>
+                <h4 id="companyName"></h4>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-5">
@@ -165,8 +184,8 @@
                 </div>
             </div>
         </div>
-        <hr/>
-        
+        <hr />
+
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div class="row text-center">
@@ -210,14 +229,14 @@
                         <div class="row">
                             <h4 class="text-center col-md-9" style="color: #3a5faf">Best Selling</h4>
                             <button type="button" id="purchasesBtn" class="btn btn-primary col-md-2">
-                                <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
+                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
                             </button>
                         </div>
                     </li>
                     <li class="list-group-item" id="purchasesDiv" style="display:none">
                         <fieldset class="row">
                             <div class="col">
-                                
+
                                 <label for="speed">Select a speed</label>
                                 <select name="speed" id="speed">
                                     <option>Slower</option>
@@ -227,9 +246,9 @@
                                     <option>Faster</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col">
-                                
+
                                 <label for="files">Select a file</label>
                                 <select name="files" id="files">
                                     <optgroup label="Scripts">
@@ -241,9 +260,9 @@
                                     </optgroup>
                                 </select>
                             </div>
-                            
+
                             <div class="row">
-                                
+
                                 <button id="purchasesFilter" type="submit" class="btn btn-primary">filter</button>
                             </div>
                         </fieldset>
@@ -259,14 +278,14 @@
                         <div class="row">
                             <h4 class="text-center col-md-9" style="color: #3a5faf">Best Selling</h4>
                             <button type="button" id="purchasesBtn" class="btn btn-primary col-md-2">
-                                <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
+                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
                             </button>
                         </div>
                     </li>
                     <li class="list-group-item" id="purchasesDiv" style="display:none">
                         <fieldset class="row">
                             <div class="col">
-                                
+
                                 <label for="speed">Select a speed</label>
                                 <select name="speed" id="speed">
                                     <option>Slower</option>
@@ -276,9 +295,9 @@
                                     <option>Faster</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col">
-                                
+
                                 <label for="files">Select a file</label>
                                 <select name="files" id="files">
                                     <optgroup label="Scripts">
@@ -290,9 +309,9 @@
                                     </optgroup>
                                 </select>
                             </div>
-                            
+
                             <div class="row">
-                                
+
                                 <button id="purchasesFilter" type="submit" class="btn btn-primary">filter</button>
                             </div>
                         </fieldset>
@@ -302,29 +321,31 @@
                     </li>
                 </ul>
             </div>
-        
+
         </div>
     </div>
-    
+
     <script src="../js/datepicker.js"></script>
     <script src="../js/MonthPicker.js"></script>
     <script src="../js/jquery/jquery.zoomooz.min.js"></script>
     <script>
-        $(function() {
+        $(function () {
             $('#equityBtn').on('click', () => {
                 $('#equityDiv').toggle('slow');
             });
-            
+
             $('#equityFilter').on('click', () => {
                 $('#equityDiv').hide('fast');
                 //loadBestSelling(false);
             });
-            
+
             fetchAssets();
             fetchEquity();
             fetchLiabilities();
+            fetchInfo();
         });
     </script>
-    
+
 </body>
+
 </html>

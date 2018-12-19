@@ -50,6 +50,18 @@
             }, 'json');
         }
     </script>
+    
+    <script>
+        function fetchInfo() {
+        $.get('http://localhost:5000/api/info', function(response) {
+            console.log(response);
+            document.getElementById("year").innerHTML = response.fiscal_year;
+            document.getElementById("companyName").innerHTML = response.company_name;
+        }, 'json');
+        
+    }
+    </script>
+
     <script type="text/javascript">
         google.charts.load('current', {
             'packages':['geochart'],
@@ -157,7 +169,8 @@
     <div class="container">
         <div class="col">
             <div class="row">
-                <h3>Analysing *year*</h3>
+                <h3>Analysing <span id="year"></span></h3>
+                <h4 id="companyName"></h4>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-5">
@@ -370,6 +383,7 @@
         });
         
         fetchTotalPurchasesAndGrowth();
+        fetchInfo();
     });
 </script>
 </body>
