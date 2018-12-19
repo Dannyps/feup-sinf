@@ -194,8 +194,8 @@ DROP TABLE IF EXISTS `header`;
 CREATE TABLE `header` (
   `audit_file_version` text,
   `company_id` text,
-  `tax_regisration_number` text,
-  `tax_Accounting_basis` tinyint(4) DEFAULT NULL,
+  `tax_registration_number` text,
+  `tax_accounting_basis` ENUM('C', 'E', 'F', 'I', 'P', 'R', 'S', 'T') DEFAULT NULL,
   `company_name` text,
   `ca_street_name` text,
   `ca_address_detail` text,
