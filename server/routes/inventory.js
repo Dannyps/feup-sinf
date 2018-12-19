@@ -144,7 +144,7 @@ router.get('/overview', function (req, res, next) {
 
   primavera.sqlQuery("SELECT TOP 5 Artigo, STKMinimo, STKMaximo, STKReposicao, STKActual, STKMinimo-STKActual as delta FROM Artigo WHERE STKMinimo > 0 ORDER BY delta DESC").then(data => {
     res.json(data);
-  })
+  });
 });
 
 
