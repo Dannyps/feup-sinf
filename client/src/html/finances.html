@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="../css/MonthPicker.css">
-
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
@@ -22,61 +20,63 @@
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         google.charts.setOnLoadCallback(drawAccountsReceivable);
         google.charts.setOnLoadCallback(drawAccountsPayable);
-        
+
         function drawAccountsReceivable() {
-            $.get('http://localhost:5000/api/finances/accountsReceivable', function(response) {
+            $.get('http://localhost:5000/api/finances/accountsReceivable', function (response) {
                 console.log(response);
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.client, item.value]);
                 }
-                
+
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Client');
                 data.addColumn('number', 'Money (Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
                     // vAxis: {minValue: 5000},
                     pieHole: 0.4,
                     legend: 'bottom',
                     pieSliceText: 'none',
                 };
-                
+
                 //create and draw the chart from DIV
                 var chart = new google.visualization.PieChart(document.getElementById('accounts_receivable'));
                 $('#accounts_receivable').removeClass('loader');
                 chart.draw(data, options);
             }, 'json');
         }
-        
+
         function drawAccountsPayable() {
-            $.get('http://localhost:5000/api/finances/accountsPayable', function(response) {
+            $.get('http://localhost:5000/api/finances/accountsPayable', function (response) {
                 console.log(response);
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.supplier, item.value]);
                 }
-                
+
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Supplier');
                 data.addColumn('number', 'Money (Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
                     // vAxis: {minValue: 5000},
                     pieHole: 0.4,
                     legend: 'bottom',
                     pieSliceText: 'none',
                 };
-                
+
                 //create and draw the chart from DIV
                 var chart = new google.visualization.PieChart(document.getElementById('accounts_payable'));
                 $('#accounts_payable').removeClass('loader');
@@ -87,72 +87,48 @@
 
     <script>
         function fetchInfo() {
-        $.get('http://localhost:5000/api/info', function(response) {
-            console.log(response);
-            document.getElementById("year").innerHTML = response.fiscal_year;
-            document.getElementById("companyName").innerHTML = response.company_name;
-        }, 'json');
-        
-    }
+            $.get('http://localhost:5000/api/info', function (response) {
+                console.log(response);
+                document.getElementById("year").innerHTML = response.fiscal_year;
+                document.getElementById("companyName").innerHTML = response.company_name;
+            }, 'json');
+
+        }
     </script>
-    
+
     <script>
         function fetchEquity() {
             $('#lia').addClass('loader');
-            $.get('http://localhost:5000/api/finances/equity', function(response) {
-                console.log(response);
-                var eq = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
-                    var item = response[idx];
-                    eq += item.value;
-                }
-                
-                var equityStr = eq + ' €';
-                document.getElementById("eq").innerHTML = equityStr;
+            $.get('http://localhost:5000/api/finances/equity', function (response) {
+                document.getElementById("eq").innerHTML = response + ' €';
                 $('#eq').removeClass('loader');
-                
+
             }, 'json');
-            
+
         }
     </script>
 
     <script>
         function fetchAssets() {
             $('#as').addClass('loader');
-            $.get('http://localhost:5000/api/finances/assets', function(response) {
-                console.log(response);
-                var assets = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
-                    var item = response[idx];
-                    assets += item.value;
-                }
-                
-                var assetsStr = assets + ' €';
-                document.getElementById("as").innerHTML = assetsStr;
+            $.get('http://localhost:5000/api/finances/assets', function (response) {
+                document.getElementById("as").innerHTML = response + ' €';
                 $('#as').removeClass('loader');
-                
+
             }, 'json');
-            
+
         }
     </script>
 
     <script>
         function fetchLiabilities() {
             $('#lia').addClass('loader');
-            $.get('http://localhost:5000/api/finances/liability', function(response) {
-                console.log(response);
-                var lia = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
-                    var item = response[idx];
-                    lia += item.value;
-                }
-                
-                var liaStr = lia + ' €';
-                document.getElementById("lia").innerHTML = liaStr;
+            $.get('http://localhost:5000/api/finances/liability', function (response) {
+                document.getElementById("lia").innerHTML = response + ' €';;
                 $('#lia').removeClass('loader');
-                
+
             }, 'json');
-            
+
         }
     </script>
 
@@ -182,7 +158,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span>   Admin</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -194,21 +170,7 @@
                 <h4 id="companyName"></h4>
             </div>
             <div class="row">
-                <div class="col-sm-12 col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
-                        <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
-                        <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <button type="button" class="btn btn-primary fullwidth" id="filter_submit">Filter</button>
-                </div>
+                <p class="font-italic">This view does not support filtering.</p>
             </div>
         </div>
         <hr />
@@ -274,8 +236,6 @@
         </div>
     </div>
 
-    <script src="../js/datepicker.js"></script>
-    <script src="../js/MonthPicker.js"></script>
     <script src="../js/jquery/jquery.zoomooz.min.js"></script>
     <script>
         $(function () {
@@ -287,7 +247,7 @@
                 $('#equityDiv').hide('fast');
                 //loadBestSelling(false);
             });
-            
+
             fetchAssets();
             fetchEquity();
             fetchLiabilities();

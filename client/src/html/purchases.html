@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Purchases Dashboard </title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="../css/MonthPicker.css">
-    
+
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         google.charts.setOnLoadCallback(drawChart);
-        
+
         function drawChart() {
-            $.get('http://localhost:5000/api/purchases/volume', function(response) {
+            $.get('http://localhost:5000/api/purchases/volume', function (response) {
                 console.log(response);
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.month, item.value]);
                 }
-                
+
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('number', 'Month');
                 data.addColumn('number', 'Cash spent(Euros)');
                 data.addRows(chartData);
-                
+
                 var options = {
                     title: 'Purchases Volume',
-                    vAxis: {minValue: 5000},
-                    hAxis: {minValue: 1, maxValue: 12,
-                    ticks: [1,2,3,4,5,6,7,8,9,10,11,12]},
+                    vAxis: {
+                        minValue: 5000
+                    },
+                    hAxis: {
+                        minValue: 1,
+                        maxValue: 12,
+                        ticks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    },
                     legend: 'bottom'
                 };
-                
+
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart'));
                 $('#linechart').removeClass('loader');
@@ -52,42 +62,49 @@
             }, 'json');
         }
     </script>
-    
+
     <script>
         function fetchInfo() {
-        $.get('http://localhost:5000/api/info', function(response) {
-            console.log(response);
-            document.getElementById("year").innerHTML = response.fiscal_year;
-            document.getElementById("companyName").innerHTML = response.company_name;
-        }, 'json');
-        
-    }
+            $.get('http://localhost:5000/api/info', function (response) {
+                console.log(response);
+                document.getElementById("year").innerHTML = response.fiscal_year;
+                document.getElementById("companyName").innerHTML = response.company_name;
+            }, 'json');
+
+        }
+    </script>
+    <script>
+        function fetchGrowth() {
+            $.get('http://localhost:5000/api/purchases/growth', function (response) {
+                document.getElementById("growth").innerHTML = response;
+            }, 'json');
+
+        }
     </script>
 
     <script type="text/javascript">
         google.charts.load('current', {
-            'packages':['geochart'],
+            'packages': ['geochart'],
             'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
         });
         google.charts.setOnLoadCallback(drawRegionsMap);
-        
+
         function drawRegionsMap() {
-            $.get('http://localhost:5000/api/purchases/countrypurchases', function(response) {
+            $.get('http://localhost:5000/api/purchases/countrypurchases', function (response) {
                 console.log('regions', response);
                 var chartData = [];
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.country, item.purchases]);
                 }
                 var data = new google.visualization.DataTable();
-                
-                data.addColumn('string','Country');
-                data.addColumn('number','Purchases (Euros)');
+
+                data.addColumn('string', 'Country');
+                data.addColumn('number', 'Purchases (Euros)');
                 data.addRows(chartData);
-                
-                var options = {
-                };
-                
+
+                var options = {};
+
                 var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
                 $('#regions_div').removeClass('loader');
                 chart.draw(data, options);
@@ -134,8 +151,9 @@
             
         }
     </script>
-    
+
 </head>
+
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -160,7 +178,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span>   Admin</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -190,75 +208,74 @@
         </div>
         <hr>
         <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div class="row text-center">
-                        <div class="col-sm-12">
-                            <ul class="list-group box-shadow">
-                                <li class="list-group-item">
-                                    <h4 class="text-center" style="color: #3a5faf">Overview</h4>
-                                </li>
-                                <li class="list-group-item">
-                                    <h4 class="sub-title">Total Purchases</h4>
-                                    <h3 id="pur"></h3>
-                                </li>
-                                <li class="list-group-item">
-                                    <h4 class="sub-title">Growth</h4>
-                                    <h3>12.4 %</h3>
-                                </li>
-                            </ul>
-                        </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <ul class="list-group box-shadow">
+                            <li class="list-group-item">
+                                <h4 class="text-center" style="color: #3a5faf">Overview</h4>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="sub-title">Total Purchases</h4>
+                                <h3 id="pur"></h3>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="sub-title">Growth</h4>
+                                <h3 id="growth"></h3>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                
-                <div class="col-sm-12 col-md-6">
-                    <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases Volume</h4>
-                                <button type="button" id="purchasesVolumeFilterBtn" class="btn btn-primary col-md-2">
-                                    <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
-                                </button>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases Volume</h4>
+                            <button type="button" id="purchasesVolumeFilterBtn" class="btn btn-primary col-md-2">
+                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
+                            </button>
+                        </div>
+                    </li>
+                    <li class="list-group-item" id="purchasesVolumeDiv" style="display:none">
+                        <fieldset class="row">
+                            <div class="col">
+
+                                <label for="speed">Select a speed</label>
+                                <select name="speed" id="speed">
+                                    <option>Slower</option>
+                                    <option>Slow</option>
+                                    <option selected="selected">Medium</option>
+                                    <option>Fast</option>
+                                    <option>Faster</option>
+                                </select>
                             </div>
-                        </li>
-                        <li class="list-group-item" id="purchasesVolumeDiv" style="display:none">
-                            <fieldset class="row">
-                                <div class="col">
-        
-                                    <label for="speed">Select a speed</label>
-                                    <select name="speed" id="speed">
-                                        <option>Slower</option>
-                                        <option>Slow</option>
-                                        <option selected="selected">Medium</option>
-                                        <option>Fast</option>
-                                        <option>Faster</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="col">
-        
-                                    <label for="files">Select a file</label>
-                                    <select name="files" id="files">
-                                        <optgroup label="Scripts">
-                                            <option value="jquery">jQuery.js</option>
-                                            <option value="jqueryui">ui.jQuery.js</option>
-                                        </optgroup>
-                                        <optgroup label="Other files">
-                                            <option value="somefile">Some </option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-                                
-                                <div class="row">
-        
-                                    <button id="purchasesVolumeFilter" type="submit" class="btn btn-primary">filter</button>
-                                </div>
-                            </fieldset>
-                        </li>
-                        <li class="list-group-item">
-                            <div id="linechart" class="loader"></div>
-                        </li>
-                    </ul>
-                </div>
+
+                            <div class="col">
+
+                                <label for="files">Select a file</label>
+                                <select name="files" id="files">
+                                    <optgroup label="Scripts">
+                                        <option value="jquery">jQuery.js</option>
+                                        <option value="jqueryui">ui.jQuery.js</option>
+                                    </optgroup>
+                                    <optgroup label="Other files">
+                                        <option value="somefile">Some </option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div class="row">
+
+                                <button id="purchasesVolumeFilter" type="submit" class="btn btn-primary">filter</button>
+                            </div>
+                        </fieldset>
+                    </li>
+                    <li class="list-group-item">
+                        <div id="linechart" class="loader"></div>
+                    </li>
+                </ul>
             </div>
             
             <div class="row">
@@ -286,79 +303,84 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-6">
-                            <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestCostumersUl">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases By Country</h4>
-                                        <button type="button" id="purchasesByCountryFilterBtn" class="btn btn-primary col-md-2">
-                                            <span class="glyphicon glyphicon-filter"aria-hidden="true"></span> Filter
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="list-group-item" id="purchasesByCountryFilterDiv" style="display:none">
-                                    <fieldset class="row">
-                                        <div class="col">
-        
-                                            <label for="speed">Select a speed</label>
-                                            <select name="speed" id="speed">
-                                                <option>Slower</option>
-                                                <option>Slow</option>
-                                                <option selected="selected">Medium</option>
-                                                <option>Fast</option>
-                                                <option>Faster</option>
-                                            </select>
-                                        </div>
-        
-                                        <div class="col">
-        
-                                            <label for="files">Select a file</label>
-                                            <select name="files" id="files">
-                                                <optgroup label="Scripts">
-                                                    <option value="jquery">jQuery.js</option>
-                                                    <option value="jqueryui">ui.jQuery.js</option>
-                                                </optgroup>
-                                                <optgroup label="Other files">
-                                                    <option value="somefile">Some </option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-        
-                                        <div class="row">
-        
-                                            <button id="purchasesByCountryFilter" type="submit" class="btn btn-primary">filter</button>
-                                        </div>
-                                    </fieldset>
-                                </li>
-                                <li class="list-group-item">
-                                    <div id="regions_div" class="loader" style="height: 200px"></div>
-                                </li>
-                            </ul>
-                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestCostumersUl">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <h4 class="text-center col-md-9" style="color: #3a5faf">Purchases By Country</h4>
+                            <button type="button" id="purchasesByCountryFilterBtn" class="btn btn-primary col-md-2">
+                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
+                            </button>
+                        </div>
+                    </li>
+                    <li class="list-group-item" id="purchasesByCountryFilterDiv" style="display:none">
+                        <fieldset class="row">
+                            <div class="col">
+
+                                <label for="speed">Select a speed</label>
+                                <select name="speed" id="speed">
+                                    <option>Slower</option>
+                                    <option>Slow</option>
+                                    <option selected="selected">Medium</option>
+                                    <option>Fast</option>
+                                    <option>Faster</option>
+                                </select>
+                            </div>
+
+                            <div class="col">
+
+                                <label for="files">Select a file</label>
+                                <select name="files" id="files">
+                                    <optgroup label="Scripts">
+                                        <option value="jquery">jQuery.js</option>
+                                        <option value="jqueryui">ui.jQuery.js</option>
+                                    </optgroup>
+                                    <optgroup label="Other files">
+                                        <option value="somefile">Some </option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div class="row">
+
+                                <button id="purchasesByCountryFilter" type="submit" class="btn btn-primary">filter</button>
+                            </div>
+                        </fieldset>
+                    </li>
+                    <li class="list-group-item">
+                        <div id="regions_div" class="loader" style="height: 200px"></div>
+                    </li>
+                </ul>
             </div>
         </div>
-        </div>
-<script src="../js/MonthPicker.js"></script>
-<script src="../js/datepicker.js"></script>
-<script src="../js/jquery/jquery.zoomooz.min.js"></script>
-<script>
-    $(function() {
-        $('#purchasesByCountryFilterBtn').on('click', () => {
-            $('#purchasesByCountryFilterDiv').toggle('slow');
-        });
-        
-        $('#purchasesByCountryFilter').on('click', () => {
-            $('#purchasesByCountryFilterDiv').hide('fast');
-            //loadBestSelling(false);
-        });
+    </div>
+    </div>
+    <script src="../js/MonthPicker.js"></script>
+    <script src="../js/datepicker.js"></script>
+    <script src="../js/jquery/jquery.zoomooz.min.js"></script>
+    <script>
+        $(function () {
+            $('#purchasesByCountryFilterBtn').on('click', () => {
+                $('#purchasesByCountryFilterDiv').toggle('slow');
+            });
 
-        $('#purchasesVolumeFilterBtn').on('click', () => {
-            $('#purchasesVolumeDiv').toggle('slow');
-        });
+            $('#purchasesByCountryFilter').on('click', () => {
+                $('#purchasesByCountryFilterDiv').hide('fast');
+                //loadBestSelling(false);
+            });
 
-        $('#purchasesVolumeFilter').on('click', () => {
-            $('#purchasesVolumeDiv').hide('fast');
-            //loadBestSelling(false);
+            $('#purchasesVolumeFilterBtn').on('click', () => {
+                $('#purchasesVolumeDiv').toggle('slow');
+            });
+
+            $('#purchasesVolumeFilter').on('click', () => {
+                $('#purchasesVolumeDiv').hide('fast');
+                //loadBestSelling(false);
+            });
+
+            fetchTotalPurchasesAndGrowth();
+            fetchInfo();
         });
         
         fetchTotalPurchasesAndGrowth();
@@ -367,4 +389,5 @@
     });
 </script>
 </body>
+
 </html>
