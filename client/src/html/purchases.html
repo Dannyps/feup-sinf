@@ -110,6 +110,7 @@
                 chart.draw(data, options);
             }, 'json');
         }
+
         function fetchTotalPurchasesAndGrowth() {
             $.get('http://localhost:5000/api/purchases/volume', function(response) {
                 console.log(response);
@@ -277,30 +278,30 @@
                     </li>
                 </ul>
             </div>
-            
-            <div class="row">
-                
-                <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <ul class="list-group box-shadow">
-                                <li class="list-group-item">
-                                    <h4 class="text-center" style="color: #3a5faf">Best Suppliers</h4>
-                                </li>
-                                <li class="list-group-item">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Purchases</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="best-suppliers">
-                                        </tbody>
-                                    </table>
-                                </li>
-                            </ul>
-                        </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="list-group box-shadow">
+                            <li class="list-group-item">
+                                <h4 class="text-center" style="color: #3a5faf">Best Suppliers</h4>
+                            </li>
+                            <li class="list-group-item">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Purchases</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="best-suppliers">
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -381,13 +382,9 @@
 
             fetchTotalPurchasesAndGrowth();
             fetchInfo();
+            fetchPurchasesBySupplier();
         });
-        
-        fetchTotalPurchasesAndGrowth();
-        fetchPurchasesBySupplier();
-        fetchInfo();
-    });
-</script>
+    </script>
 </body>
 
 </html>

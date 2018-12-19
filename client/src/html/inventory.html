@@ -6,53 +6,52 @@
     <title>Inventory Dashboard </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
-    
+        crossorigin="anonymous">
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="../css/MonthPicker.css">
-    
+
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-    crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     <script>
-
         function fetchInfo() {
-            $.get('http://localhost:5000/api/info', function(response) {
+            $.get('http://localhost:5000/api/info', function (response) {
                 console.log(response);
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
             }, 'json');
-            
+
         }
 
         function fetchTotalStockValue() {
-            $.get('http://localhost:5000/api/inventory/inventoryvalue', function(response) {
+            $.get('http://localhost:5000/api/inventory/inventoryvalue', function (response) {
                 console.log(response);
                 var chartData = [];
                 var totalStock = 0;
-                for(var idx = 0; idx < response.length; ++idx) {
+                for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     totalStock += item.value;
                     chartData.push([item.month, item.value]);
                 }
-                
+
                 var stockStr = totalStock + ' €';
                 document.getElementById("stockvalue").innerHTML = stockStr;
-                
+
             }, 'json');
-            
+
         }
 
         function fetchInventoryOverview() {
-            $.get('http://localhost:5000/api/inventory/overview', function(response) {
+            $.get('http://localhost:5000/api/inventory/overview', function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
-                for(var idx = 0; idx < maxLength; ++idx) {
+                for (var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
                     var alertType = "";
 
@@ -61,19 +60,21 @@
                     else if (item.delta > 15)
                         alertType = "list-group-item-warning";
 
-                    var list_item = $(`<li class="list-group-item ${alertType}">${item.Artigo}<span class="badge">${item.delta}</span></li>`);
+                    var list_item = $(
+                        `<li class="list-group-item ${alertType}">${item.Artigo}<span class="badge">${item.delta}</span></li>`
+                    );
                     items.push(list_item);
                 }
 
                 items.forEach(e => {
                     $('#inventory-overview').append(e);
                 });
-                
+
             }, 'json');
-            
+
         }
     </script>
-    
+
 </head>
 
 <body>
@@ -100,39 +101,25 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span>   Admin</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
             </ul>
         </div>
     </nav>
     <div class="container" style="margin-bottom: 15px;">
-        
+
         <div class="col">
             <div class="row">
                 <h3>Analysing <span id="year"></span></h3>
                 <h4 id="companyName"></h4>
             </div>
             <div class="row">
-                <div class="col-sm-12 col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
-                        <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
-                        <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <button type="button" class="btn btn-primary fullwidth" id="filter_submit">Filter</button>
-                </div>
+                <p class="font-italic">This view does not support filtering.</p>
             </div>
         </div>
         <hr />
-        
+
         <div class="row">
-            
+
             <div class="col-sm-12 col-md-6">
                 <ul class="list-group box-shadow">
                     <li class="list-group-item">
@@ -150,14 +137,14 @@
                     </li>
                     <li class="list-group-item">
                         <ul class="list-group" id="inventory-overview">
-                            
+
                         </ul>
                     </li>
                 </ul>
             </div>
-        
+
         </div>
-        
+
     </div>
     <script src="../js/MonthPicker.js"></script>
     <script src="../js/datepicker.js"></script>
@@ -167,7 +154,7 @@
             $('#stockOverTimeBtn').on('click', () => {
                 $('#stockOverTimeDiv').toggle('slow');
             });
-            
+
             $('#stockOverTimeFilter').on('click', () => {
                 $('#stockOverTimeDiv').hide('fast');
                 //loadBestSelling(false);
