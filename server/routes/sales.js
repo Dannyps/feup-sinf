@@ -3,9 +3,11 @@ var router = express.Router();
 
 /* GET sales by country listing. */
 router.get('/countrysales', function (req, res, next) {
+  let min, max;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
 
-
-  con.query("SELECT country, ROUND(SUM( document_totals_net_total),2) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id GROUP BY country", function (err, result) {
+  con.query("SELECT country, ROUND(SUM( document_totals_net_total),2) AS sales  FROM sinf.invoice AS i INNER JOIN sinf.ship_to AS st  ON i.ship_to_id = st.id INNER JOIN sinf.address AS a ON st.address_id = a.id where MONTH(ds_invoice_status_date) >= " + min + " and MONTH(ds_invoice_status_date) <= " + max + " GROUP BY country", function (err, result) {
     res.json(result);
   });
 
@@ -68,8 +70,8 @@ router.get('/productsales', function (req, res, next) {
 
 router.get('/totalsales', function (req, res, next) {
   let min, max;
-  typeof req.query.m !== undefined ? min = req.query.m : min = 1;
-  typeof req.query.m !== undefined ? max = req.query.M : max = 12;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
   con.query("select MONTH(ds_invoice_status_date) as month, ROUND(sum(document_totals_net_total),2) as `value` from invoice where MONTH(ds_invoice_status_date) >= " + min + " and MONTH(ds_invoice_status_date) <= " + max + " group by month", function (err, result) {
     var totalSales = [];
     result.forEach(res => {
@@ -88,7 +90,11 @@ router.get('/totalsales', function (req, res, next) {
 /* GET purchases volume. */
 router.get('/bestsellers', function (req, res, next) {
 
-  var salesByCountry = con.query("SELECT product_code_id AS product, quantity, MONTH(tax_point_date) AS month FROM sinf.line WHERE tax_point_date IS NOT NULL group by month(tax_point_date), product_code_id", function (err, result) {
+  let min, max;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
+
+  var salesByCountry = con.query("SELECT product_code_id AS product, quantity, MONTH(tax_point_date) AS month FROM sinf.line WHERE tax_point_date IS NOT NULL and MONTH(tax_point_date) >= " + min + " and MONTH(tax_point_date) <= " + max + " group by month(tax_point_date), product_code_id", function (err, result) {
     var month = 'year';
 
     let products = [];
@@ -160,30 +166,15 @@ router.get('/bestsellers', function (req, res, next) {
 
 });
 
-/* GET purchases volume. */
-router.get('/salesbycustomer', function (req, res, next) {
-
-  var salesByCustomer = [{
-      'customer': 'Customer A',
-      'value': 70000,
-    },
-    {
-      'customer': 'Customer B',
-      'value': 30000,
-    },
-    {
-      'customer': 'Customer C',
-      'value': 50000,
-    },
-  ];
-  res.json(volume);
-
-});
-
 
 /* GET best consumers. */
 router.get('/bestconsumers', function (req, res, next) {
-  let sql = "Select company_name as consumer,round(SUM(document_totals_net_total), 2) as sales from sinf.invoice as i inner join sinf.customer as c on i.customer_id = c.id group by customer_id order by sales desc"
+  let min, max;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
+
+  let sql = "Select company_name as consumer,round(SUM(document_totals_net_total), 2) as sales from sinf.invoice as i inner join sinf.customer as c on i.customer_id = c.id  where month(ds_invoice_status_date) <= " + max + " and month(ds_invoice_status_date) >= " + min + " group by customer_id order by sales desc";
+  console.log(sql)
   con.query(sql, function (err, result) {
 
     res.json(result);

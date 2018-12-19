@@ -6,8 +6,8 @@ var router = express.Router();
 router.get('/volume', function (req, res, next) {
 
   let min, max;
-  typeof req.query.m !== undefined ? min = req.query.m: min = 1;
-  typeof req.query.m !== undefined ? max = req.query.M: max = 12;
+  typeof req.query.m !== "undefined" ? min = req.query.m: min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M: max = 12;
 
   con.query("SELECT round(SUM(credit_amount),2) AS value, month(transaction_date) AS month FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id  INNER JOIN sinf.transaction AS t ON t.id = cl.transaction_id WHERE month(transaction_date) <= " + max + " and month(transaction_date) >= " + min + " group by month(transaction_date)", function (err, result) {
     for (let i = 1; i <= 12; i++) {
@@ -50,8 +50,8 @@ router.get('/growth', function (req, res, next) {
 router.get('/suppliertotal', function (req, res, next) {
 
   let min, max;
-  typeof req.query.m !== undefined ? min = req.query.m: min = 1;
-  typeof req.query.m !== undefined ? max = req.query.M: max = 12;
+  typeof req.query.m !== "undefined" ? min = req.query.m: min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M: max = 12;
   con.query("SELECT company_name AS supplier, round(sum(credit_amount),2) AS value FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id INNER JOIN transaction on cl.transaction_id = transaction.id WHERE month(transaction_date) <= " + max + " and month(transaction_date) >= " + min + " GROUP BY company_name ORDER BY value DESC", function (err, result) {
     res.json(result);
   });
