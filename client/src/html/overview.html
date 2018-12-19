@@ -158,13 +158,8 @@
     <script>
         function fetchCashBalance() {
           $.get('http://localhost:5000/api/finances/cashbalance', function(response) {
-            console.log(response);
-            var cash = 0;
-            for(var idx = 0; idx < response.length; ++idx) {
-                var item = response[idx];
-                cash += item.value;
-            }
-            var cashStr = cash + ' €';
+                     
+            var cashStr = response + ' €';
             document.getElementById("cashbalance").innerHTML = cashStr;
         }, 'json');
     
@@ -297,11 +292,9 @@
                                     <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
                                 </li>
                                 <li class="list-group-item" style="color: #333">
+                                    <h5>(from SAFT)</h5>
                                     <h4 class="sub-title"> Cash balance </h4>
                                     <h3 id="cashbalance"></h3>
-                                </li>
-                                <li class="list-group-item">
-                                    <div id="linechart4" class="loader"></div>
                                 </li>
                             </ul>
                         </div>
