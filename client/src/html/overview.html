@@ -22,12 +22,16 @@
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+
+        var WAITING_LOADING = 0;
+
         google.charts.load('current', {
             'packages': ['corechart']
         });
         google.charts.setOnLoadCallback(drawTotalSalesChart);
 
         function drawTotalSalesChart(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -51,12 +55,15 @@
                 var chart = new google.visualization.LineChart(document.getElementById('linechart2'));
                 $('#linechart2').removeClass('loader');
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
 
         google.charts.setOnLoadCallback(drawSupplierExpensesChart);
 
         function drawSupplierExpensesChart(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/purchases/suppliertotal?m=' + min + '&M=' + max, function (response) {
                 var chartData = [];
                 var maxLength = response.length < 3 ? response.length : 3;
@@ -79,14 +86,17 @@
                 };
 
                 var chart = new google.visualization.BarChart(document.getElementById('linechart3'));
-                $('#linechart3').removeClass('loader');
+
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
 
         google.charts.setOnLoadCallback(drawCashBalanceChart);
 
         function drawCashBalanceChart() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/cashbalance', function (response) {
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -107,12 +117,15 @@
                 };
 
                 var chart = new google.visualization.LineChart(document.getElementById('linechart4'));
-                $('#linechart4').removeClass('loader');
+
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
 
         function fetchTotalSales(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 var totalSales2 = 0;
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -122,19 +135,25 @@
                 var salesStr = totalSales2.toFixed(2) + ' €';
                 console.log(salesStr);
                 document.getElementById("totalSales2").innerHTML = salesStr;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchInfo() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/info', function (response) {
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchTotalExpenses(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
                 var totalExpenses = 0;
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -143,11 +162,14 @@
                 }
                 var expensesStr = totalExpenses.toFixed(2) + ' €';
                 document.getElementById("totalExpenses").innerHTML = expensesStr;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchTotalStockValue() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/inventory/inventoryvalue', function (response) {
                 var totalStock = 0;
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -156,11 +178,14 @@
                 }
                 var stockStr = totalStock.toFixed(2) + ' €';
                 document.getElementById("totalStock").innerHTML = stockStr;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchInventoryOverview() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/inventory/overview', function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
@@ -183,19 +208,31 @@
                     $('#inventory-overview').append(e);
                 });
 
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchCashBalance() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/cashbalance', function (response) {
                 var cashStr = response + ' €';
                 document.getElementById("cashbalance").innerHTML = cashStr;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
+        }
 
+        function checkLoading() {
+            if (WAITING_LOADING <= 0)
+                    setTimeout(
+                    function() { $('#loading').hide('fast'); },
+                    1000);
         }
 
         function reload(min, max) {
+            $('#loading').show('fast');
             fetchTotalSales(min, max);
             fetchTotalExpenses(min, max);
             drawSupplierExpensesChart(min, max);
@@ -206,10 +243,13 @@
 </head>
 
 <body onload="fetchTotalSales();fetchTotalExpenses();fetchTotalStockValue();fetchCashBalance();fetchInfo();fetchInventoryOverview()">
+    <div class="loading" id="loading">Loading&#8230;</div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Última Venda</a>
+                <a class="navbar-brand" href="overview.html" style="font-size: 25px; margin: auto">
+                    <span class="glyphicon glyphicon-dashboard"></span>
+                </a>
             </div>
             <ul class="nav navbar-nav">
                 <li class="active">
@@ -240,16 +280,17 @@
                 <h3>Analysing <span id="year"></span></h3>
                 <h4 id="companyName"></h4>
             </div>
+            <hr>
             <div class="row">
                 <div class="col-sm-12 col-md-5">
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                         <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-5">
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                         <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
                     </div>
                 </div>
@@ -275,7 +316,7 @@
                                     <h3 id="totalSales2"></h3>
                                 </li>
                                 <li class="list-group-item">
-                                    <div id="linechart2" class="loader"></div>
+                                    <div id="linechart2"></div>
                                 </li>
                             </ul>
                         </div>
@@ -297,7 +338,7 @@
                                     <h3 id="totalExpenses"></h3>
                                 </li>
                                 <li class="list-group-item">
-                                    <div id="linechart3" class="loader">
+                                    <div id="linechart3">
                                     </div>
                                 </li>
                             </ul>
@@ -314,7 +355,7 @@
                             <ul class="list-group box-shadow">
                                 <li class="list-group-item">
                                     <h4 class="text-center title" style="color: #3a5faf">Inventory Overview</h4>
-                                    <h6>(not affected by filtering)</h6>
+                                    <h5 style="color: #333">(not affected by filtering)</h5>
                                 </li>
                                 <li class="list-group-item values" style="color: #333">
                                     <h4 class="sub-title">Total Stock Value </h4>
@@ -322,8 +363,8 @@
                                     <h3 id="totalStock"></h3>
                                 </li>
                                 <li class="list-group-item">
-                                    <h4 class="text-center" style="color: #3a5faf">Most urgent to buy</h4>
-                                    <h5>(from Primavera)</h5>
+                                    <h4 class="text-center" style="color: #333"><strong>Most Urgent to Buy</strong> </h4>
+                                    <h5 style="color: #333">(from Primavera)</h5>
                                     <ul class="list-group" id="inventory-overview">
                                     </ul>
                                 </li>
@@ -340,7 +381,7 @@
                             <ul class="list-group box-shadow">
                                 <li class="list-group-item">
                                     <h4 class="text-center title" style="color: #3a5faf">Finances Overview</h4>
-                                    <h6>(not affected by filtering)</h6>
+                                    <h5 style="color: #333">(not affected by filtering)</h5>
                                 </li>
                                 <li class="list-group-item" style="color: #333">
                                     <h4 class="sub-title"> Cash balance </h4>

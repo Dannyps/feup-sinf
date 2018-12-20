@@ -20,18 +20,25 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
     <script>
+
+        var WAITING_LOADING = 0;
+
         function fetchInfo() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/info', function (response) {
-                console.log(response);
+
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchTotalStockValue() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/inventory/inventoryvalue', function (response) {
-                console.log(response);
+
                 var chartData = [];
                 var totalStock = 0;
                 for (var idx = 0; idx < response.length; ++idx) {
@@ -43,11 +50,14 @@
                 var stockStr = totalStock.toFixed(2) + ' €';
                 document.getElementById("stockvalue").innerHTML = stockStr;
 
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
         }
 
         function fetchInventoryOverview() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/inventory/overview', function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
@@ -69,19 +79,30 @@
                 items.forEach(e => {
                     $('#inventory-overview').append(e);
                 });
-
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
 
+        }
+
+        function checkLoading() {
+            if (WAITING_LOADING <= 0)
+                setTimeout(
+                    function() { $('#loading').hide('fast'); },
+                    1000);
         }
     </script>
 
 </head>
 
 <body>
+    <div class="loading" id="loading">Loading&#8230;</div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Última Venda</a>
+                <a class="navbar-brand" href="overview.html" style="font-size: 25px; margin: auto">
+                    <span class="glyphicon glyphicon-dashboard"></span>
+                </a>
             </div>
             <ul class="nav navbar-nav">
                 <li>

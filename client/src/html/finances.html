@@ -6,8 +6,8 @@
     <title>Finances Dashboard </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-
+    crossorigin="anonymous">
+    
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
@@ -16,129 +16,141 @@
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-
+    crossorigin="anonymous"></script>
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+
+        var WAITING_LOADING = 0;
+
         google.charts.load('current', {
             'packages': ['corechart']
         });
         google.charts.setOnLoadCallback(drawAccountsReceivable);
         google.charts.setOnLoadCallback(drawAccountsPayable);
-
+        
         function drawAccountsReceivable() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/accountsReceivable', function (response) {
-                console.log(response);
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.client, item.value]);
                 }
-
+                
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Client');
                 data.addColumn('number', 'Money (Euros)');
                 data.addRows(chartData);
-
+                
                 var options = {
                     // vAxis: {minValue: 5000},
                     pieHole: 0.4,
                     legend: 'bottom',
                     pieSliceText: 'none',
                 };
-
+                
                 //create and draw the chart from DIV
                 var chart = new google.visualization.PieChart(document.getElementById('accounts_receivable'));
-                $('#accounts_receivable').removeClass('loader');
+                
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
-
+        
         function drawAccountsPayable() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/accountsPayable', function (response) {
-                console.log(response);
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
                     chartData.push([item.supplier, item.value]);
                 }
-
+                
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Supplier');
                 data.addColumn('number', 'Money (Euros)');
                 data.addRows(chartData);
-
+                
                 var options = {
                     // vAxis: {minValue: 5000},
                     pieHole: 0.4,
                     legend: 'bottom',
                     pieSliceText: 'none',
                 };
-
+                
                 //create and draw the chart from DIV
                 var chart = new google.visualization.PieChart(document.getElementById('accounts_payable'));
-                $('#accounts_payable').removeClass('loader');
+                
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
-    </script>
-
-    <script>
         function fetchInfo() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/info', function (response) {
-                console.log(response);
+
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
         }
-    </script>
-
-    <script>
         function fetchEquity() {
-            $('#lia').addClass('loader');
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/equity', function (response) {
                 document.getElementById("eq").innerHTML = response + ' €';
-                $('#eq').removeClass('loader');
-
+                
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
         }
-    </script>
-
-    <script>
         function fetchAssets() {
-            $('#as').addClass('loader');
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/assets', function (response) {
                 document.getElementById("as").innerHTML = response + ' €';
-                $('#as').removeClass('loader');
-
+                
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
         }
-    </script>
-
-    <script>
+        
         function fetchLiabilities() {
-            $('#lia').addClass('loader');
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/finances/liability', function (response) {
                 document.getElementById("lia").innerHTML = response + ' €';;
-                $('#lia').removeClass('loader');
-
+                
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
+        }
+        
+        function checkLoading() {
+            if (WAITING_LOADING <= 0)
+            setTimeout(
+            function() { $('#loading').hide('fast'); },
+            1000);
         }
     </script>
-
+    
 </head>
 
 <body>
+    <div class="loading" id="loading">Loading&#8230;</div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Última Venda</a>
+                <a class="navbar-brand" href="overview.html" style="font-size: 25px; margin: auto">
+                    <span class="glyphicon glyphicon-dashboard"></span>
+                </a>
             </div>
             <ul class="nav navbar-nav">
                 <li>
@@ -162,7 +174,7 @@
             </ul>
         </div>
     </nav>
-
+    
     <div class="container">
         <div class="col">
             <div class="row">
@@ -174,7 +186,7 @@
             </div>
         </div>
         <hr />
-
+        
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div class="row text-center">
@@ -182,7 +194,7 @@
                         <ul class="list-group box-shadow">
                             <li class="list-group-item col">
                                 <h4 class="sub-title" style="color: #3a5faf">Final Equity value</h4>
-                                <h3 id="eq" class="loader"></h3>
+                                <h3 id="eq" ></h3>
                             </li>
                         </ul>
                     </div>
@@ -194,7 +206,7 @@
                         <ul class="list-group box-shadow">
                             <li class="list-group-item col">
                                 <h4 class="sub-title" style="color: #3a5faf">Final Assets Value</h4>
-                                <h3 id="as" class="loader"></h3>
+                                <h3 id="as" ></h3>
                             </li>
                         </ul>
                     </div>
@@ -206,7 +218,7 @@
                         <ul class="list-group box-shadow">
                             <li class="list-group-item">
                                 <h4 class="sub-title" style="color: #3a5faf">Final Liabilities Value</h4>
-                                <h3 id="lia" class="loader"></h3>
+                                <h3 id="lia" ></h3>
                             </li>
                         </ul>
                     </div>
@@ -218,7 +230,7 @@
                         <h4 class="text-center" style="color: #3a5faf">Accounts Receivable</h4>
                     </li>
                     <li class="list-group-item">
-                        <div id="accounts_receivable" class="loader" style="height: 300px"></div>
+                        <div id="accounts_receivable"  style="height: 300px"></div>
                     </li>
                 </ul>
             </div>
@@ -228,33 +240,25 @@
                         <h4 class="text-center" style="color: #3a5faf">Accounts Payable</h4>
                     </li>
                     <li class="list-group-item">
-                        <div id="accounts_payable" class="loader" style="height:300px"></div>
+                        <div id="accounts_payable"  style="height:300px"></div>
                     </li>
                 </ul>
             </div>
-
+            
         </div>
     </div>
-
+    
     <script src="../js/jquery/jquery.zoomooz.min.js"></script>
     <script>
         $(function () {
-            $('#equityBtn').on('click', () => {
-                $('#equityDiv').toggle('slow');
-            });
-
-            $('#equityFilter').on('click', () => {
-                $('#equityDiv').hide('fast');
-                //loadBestSelling(false);
-            });
-
+            
             fetchAssets();
             fetchEquity();
             fetchLiabilities();
             fetchInfo();
         });
     </script>
-
+    
 </body>
 
 </html>

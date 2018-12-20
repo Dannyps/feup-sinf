@@ -6,28 +6,32 @@
     <title>Sales Dashboard </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-
+    crossorigin="anonymous">
+    
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="../css/MonthPicker.css">
-
+    
     <script src="../js/jquery/jquery.min.js"></script>
     <script src="../js/jquery/jquery-ui.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-
+    crossorigin="anonymous"></script>
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+        
+        var WAITING_LOADING = 0;
+        
         google.charts.load('current', {
             'packages': ['corechart']
         });
         google.charts.setOnLoadCallback(drawBestSellerProductsChart);
-
+        
         function drawBestSellerProductsChart(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/sales/bestsellers?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
                 var chartData = [];
@@ -35,18 +39,18 @@
                     var item = response[idx];
                     var args = [];
                     for (key in item)
-                        args.push(item[key]);
+                    args.push(item[key]);
                     chartData.push(args);
                 }
-
+                
                 // Create the data table.
                 var data = new google.visualization.DataTable();
                 let products = response[0];
                 for (key in item)
-                    data.addColumn('number', key);
-
+                data.addColumn('number', key);
+                
                 data.addRows(chartData);
-
+                
                 var options = {
                     title: 'Units sold of best-sellers',
                     legend: 'bottom',
@@ -56,26 +60,28 @@
                         ticks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
                     }
                 };
-
+                
                 //create and draw the chart from DIV
                 var chart = new google.visualization.LineChart(document.getElementById('linechart'));
-                $('#linechart').removeClass('loader');
-
+                
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
     </script>
-
-
+    
+    
     <script type="text/javascript">
         google.charts.load('current', {
             'packages': ['geochart'],
             'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
         });
         google.charts.setOnLoadCallback(drawRegionsMap);
-
-
+        
+        
         function drawRegionsMap(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/sales/countrysales?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
                 var chartData = [];
@@ -85,56 +91,64 @@
                     chartData.push([item.country, item.sales]);
                 }
                 var data = new google.visualization.DataTable();
-
+                
                 console.log(chartData);
-
+                
                 data.addColumn('string', 'Country');
                 data.addColumn('number', 'Sales (Euros)');
                 data.addRows(chartData);
-
+                
                 var options = {};
-
+                
                 var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-                $('#regions_div').removeClass('loader');
                 chart.draw(data, options);
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
         }
-
+        
         function fetchInfo() {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/info', function (response) {
                 console.log(response);
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
-
+            
+            
         }
-
+        
         function fetchBestConsumers(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $('#best-consumers').html("");
             $.get('http://localhost:5000/api/sales/bestconsumers?m=' + min + '&M=' + max, function (response) {
                 var items = [];
                 var maxLength = response.length < 5 ? response.length : 5;
                 for (var idx = 0; idx < maxLength; ++idx) {
                     var item = response[idx];
-
+                    
                     var list_item = $(
-                        `<tr>
-                                            <td>${item.consumer}</td>
-                                            <td><strong>${item.sales} €</strong></td>
-                                        </tr>`
+                    `<tr>
+                        <td>${item.consumer}</td>
+                        <td><strong>${item.sales} €</strong></td>
+                    </tr>`
                     );
                     items.push(list_item);
                 }
-
+                
                 items.forEach(e => {
                     $('#best-consumers').append(e);
                 });
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
         }
-
+        
         function fetchTotalSales(min = 1, max = 12) {
+            WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
                 var totalSales = 0;
@@ -142,29 +156,41 @@
                     var item = response[idx];
                     totalSales += item.value;
                 }
-
+                
                 var salesStr = totalSales.toFixed(2) + ' €';
                 document.getElementById("sales").innerHTML = salesStr;
-
+                WAITING_LOADING =- 1;
+                checkLoading();
             }, 'json');
-
+            
         }
-
+        
+        function checkLoading() {
+            if (WAITING_LOADING <= 0)
+                setTimeout(
+                    function() { $('#loading').hide('fast'); },
+                    1000);
+        }
+        
         function reload(min, max) {
+            $('#loading').show('fast');
             fetchTotalSales(min, max);
             fetchBestConsumers(min, max);
             drawBestSellerProductsChart(min, max);
             drawRegionsMap(min, max);
         }
     </script>
-
+    
 </head>
 
-<body onload="fetchTotalSales()">
+<body>
+    <div class="loading" id="loading">Loading&#8230;</div>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Última Venda</a>
+                <a class="navbar-brand" href="overview.html" style="font-size: 25px; margin: auto">
+                    <span class="glyphicon glyphicon-dashboard"></span>
+                </a>
             </div>
             <ul class="nav navbar-nav">
                 <li>
@@ -194,16 +220,17 @@
                 <h3>Analysing <span id="year"></span></h3>
                 <h4 id="companyName"></h4>
             </div>
+            <hr>
             <div class="row">
                 <div class="col-sm-12 col-md-5">
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                         <input type="text" class="form-control" placeholder="January" id="start_date" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-5">
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">@</span>
+                        <span class="input-group-addon glyphicon glyphicon-calendar"></span>
                         <input type="text" class="form-control" placeholder="December" id="end_date" aria-describedby="basic-addon1">
                     </div>
                 </div>
@@ -233,60 +260,21 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="col-sm-12 col-md-6">
                 <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestSellingUl">
                     <li class="list-group-item">
-                        <div class="row">
-                            <h4 class="text-center col-md-9" style="color: #3a5faf">Best Selling</h4>
-                            <button type="button" id="bestSellingFilterBtn" class="btn btn-primary col-md-2">
-                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
-                            </button>
-                        </div>
-                    </li>
-                    <li class="list-group-item" id="bestSellingFilterDiv" style="display:none">
-                        <fieldset class="row">
-                            <div class="col">
-
-                                <label for="speed">Select a speed</label>
-                                <select name="speed" id="speed">
-                                    <option>Slower</option>
-                                    <option>Slow</option>
-                                    <option selected="selected">Medium</option>
-                                    <option>Fast</option>
-                                    <option>Faster</option>
-                                </select>
-                            </div>
-
-                            <div class="col">
-
-                                <label for="files">Select a file</label>
-                                <select name="files" id="files">
-                                    <optgroup label="Scripts">
-                                        <option value="jquery">jQuery.js</option>
-                                        <option value="jqueryui">ui.jQuery.js</option>
-                                    </optgroup>
-                                    <optgroup label="Other files">
-                                        <option value="somefile">Some </option>
-                                    </optgroup>
-                                </select>
-                            </div>
-
-                            <div class="row">
-
-                                <button id="bestSellingFilter" type="submit" class="btn btn-primary">filter</button>
-                            </div>
-                        </fieldset>
+                        <h4 class="text-center" style="color: #3a5faf">Best Selling</h4>
                     </li>
                     <li class="list-group-item">
-                        <div id="linechart" class="loader"></div>
+                        <div id="linechart"></div>
                     </li>
                 </ul>
             </div>
         </div>
-
+        
         <div class="row">
-
+            
             <div class="col-sm-12 col-md-6">
                 <div class="row">
                     <div class="col-sm-12">
@@ -303,7 +291,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="best-consumers">
-
+                                        
                                     </tbody>
                                 </table>
                             </li>
@@ -314,81 +302,26 @@
             <div class="col-sm-12 col-md-6">
                 <ul class="list-group box-shadow zoomTarget" data-scalemode="width" id="bestCustomersUl">
                     <li class="list-group-item">
-                        <div class="row">
-                            <h4 class="text-center col-md-9" style="color: #3a5faf">Best Customers</h4>
-                            <button type="button" id="bestCustomersFilterBtn" class="btn btn-primary col-md-2">
-                                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter
-                            </button>
-                        </div>
-                    </li>
-                    <li class="list-group-item" id="bestCustomersFilterDiv" style="display:none">
-                        <fieldset class="row">
-                            <div class="col">
-
-                                <label for="speed">Select a speed</label>
-                                <select name="speed" id="speed">
-                                    <option>Slower</option>
-                                    <option>Slow</option>
-                                    <option selected="selected">Medium</option>
-                                    <option>Fast</option>
-                                    <option>Faster</option>
-                                </select>
-                            </div>
-
-                            <div class="col">
-
-                                <label for="files">Select a file</label>
-                                <select name="files" id="files">
-                                    <optgroup label="Scripts">
-                                        <option value="jquery">jQuery.js</option>
-                                        <option value="jqueryui">ui.jQuery.js</option>
-                                    </optgroup>
-                                    <optgroup label="Other files">
-                                        <option value="somefile">Some </option>
-                                    </optgroup>
-                                </select>
-                            </div>
-
-                            <div class="row">
-
-                                <button id="bestCustomersFilter" type="submit" class="btn btn-primary">filter</button>
-                            </div>
-                        </fieldset>
+                        <h4 class="text-center" style="color: #3a5faf">Best Customers</h4>
                     </li>
                     <li class="list-group-item">
-                        <div id="regions_div" class="loader" style="height: 200px"></div>
+                        <div id="regions_div" style="height: 200px"></div>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-    </div>
-    <script src="../js/MonthPicker.js"></script>
-    <script src="../js/datepicker.js"></script>
-    <script src="../js/jquery/jquery.zoomooz.min.js"></script>
-    <script>
-        $(function () {
-            fetchInfo();
-            fetchBestConsumers();
-            $('#bestSellingFilterBtn').on('click', () => {
-                $('#bestSellingFilterDiv').toggle('slow');
-            });
-
-            $('#bestSellingFilter').on('click', () => {
-                $('#bestSellingFilterDiv').hide('fast');
-                //loadBestSelling(false);
-            });
-
-            $('#bestCustomersFilterBtn').on('click', () => {
-                $('#bestCustomersFilterDiv').toggle('slow');
-            });
-
-            $('#bestCustomersFilter').on('click', () => {
-                $('#bestCustomersFilterDiv').hide('fast');
-                //loadBestSelling(false);
-            });
-        });
-    </script>
+</div>
+<script src="../js/MonthPicker.js"></script>
+<script src="../js/datepicker.js"></script>
+<script src="../js/jquery/jquery.zoomooz.min.js"></script>
+<script>
+    $(function () {
+        fetchInfo();
+        fetchBestConsumers();
+        fetchTotalSales();
+    });
+</script>
 </body>
 
 </html>
