@@ -60,7 +60,7 @@ router.get('/growth', function (req, res, next) {
     if (!(foundm && foundM)) {
       res.json("n/a");
     } else {
-      res.json((r[max]/r[min]*100).toFixed(2) + "%");
+      res.json(((r[max]-r[min])/r[min]*100).toFixed(2) + "%");
     }
 
   });

@@ -134,6 +134,15 @@
             }, 'json');
         }
 
+
+        function fetchGrowth(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/sales/growth?m=' + min + '&M=' + max, function (response) {
+                document.getElementById("growth").innerHTML = response;
+            }, 'json');
+
+        }
+
+
         function fetchTotalSales(min = 1, max = 12) {
             $.get('http://localhost:5000/api/sales/totalsales?m=' + min + '&M=' + max, function (response) {
                 console.log(response);
@@ -155,6 +164,7 @@
             fetchBestConsumers(min, max);
             drawBestSellerProductsChart(min, max);
             drawRegionsMap(min, max);
+            fetchGrowth(min, max);
         }
     </script>
 
@@ -227,7 +237,7 @@
                             </li>
                             <li class="list-group-item">
                                 <h4 class="sub-title">Growth</h4>
-                                <h3>12.4 %</h3>
+                                <h3 id="growth"></h3>
                             </li>
                         </ul>
                     </div>
@@ -369,6 +379,7 @@
     <script>
         $(function () {
             fetchInfo();
+            fetchGrowth();
             fetchBestConsumers();
             $('#bestSellingFilterBtn').on('click', () => {
                 $('#bestSellingFilterDiv').toggle('slow');
