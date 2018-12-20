@@ -74,8 +74,8 @@
         }
     </script>
     <script>
-        function fetchGrowth() {
-            $.get('http://localhost:5000/api/purchases/growth', function (response) {
+        function fetchGrowth(min = 1, max = 12) {
+            $.get('http://localhost:5000/api/purchases/growth?m=' + min + '&M=' + max, function (response) {
                 document.getElementById("growth").innerHTML = response;
             }, 'json');
 
@@ -160,6 +160,7 @@
             fetchTotalPurchasesAndGrowth(min, max);
             drawChart(min, max);
             drawRegionsMap(min, max);
+            fetchGrowth(min, max);
         }
     </script>
 
@@ -393,6 +394,7 @@
             fetchTotalPurchasesAndGrowth();
             fetchInfo();
             fetchPurchasesBySupplier();
+            fetchGrowth();
         });
     </script>
 </body>
