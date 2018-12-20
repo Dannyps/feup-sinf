@@ -13,7 +13,7 @@ var financesRouter = require('./routes/finances');
 var inventoryRouter = require('./routes/inventory');
 
 global.con = mysql.createConnection({
-	host: "rr.dannyps.net",
+	host: "127.0.0.1",
 	user: "sinf",
 	password: "fnis18",
 	database: "sinf",
@@ -35,8 +35,8 @@ global.months = {
   12: 'Dec'
 }
 
-// var p = require('./primavera/primavera.js');
-// global.primavera = new p;
+var p = require('./primavera/primavera.js');
+global.primavera = new p;
 
 var app = express();
 
