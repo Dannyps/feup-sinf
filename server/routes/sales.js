@@ -13,6 +13,31 @@ router.get('/countrysales', function (req, res, next) {
 
 });
 
+
+router.get('/growth', function (req, res, next) {
+  let min, max;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
+  con.query("SELECT ROUND(SUM( credit_amount),2) AS value, month(tax_point_date) as m FROM sinf.line where tax_point_date IS NOT NULL GROUP BY month(tax_point_date)", function (err, result) {
+    console.log(result);
+    let r = [];
+    let foundM = 0,
+      foundm = 0;
+    result.forEach(e => {
+      if (e.m == min) foundm = 1;
+      if (e.m == max) foundM = 1;
+      r[e.m] = e.value;
+    });
+    console.log(foundm, foundM)
+    if (!(foundm && foundM)) {
+      res.json("n/a");
+    } else {
+      res.json(((r[max]-r[min])/r[min]*100).toFixed(2) + "%");
+    }
+
+  });
+});
+
 router.get('/productsales', function (req, res, next) {
 
 

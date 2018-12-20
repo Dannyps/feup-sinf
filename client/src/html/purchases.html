@@ -33,7 +33,7 @@
         function drawChart(min = 1, max = 12) {
             WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
-
+                
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -72,7 +72,7 @@
         function fetchInfo() {
             WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/info', function (response) {
-
+                
                 document.getElementById("year").innerHTML = response.fiscal_year;
                 document.getElementById("companyName").innerHTML = response.company_name;
                 WAITING_LOADING =- 1;
@@ -82,9 +82,9 @@
         }
     </script>
     <script>
-        function fetchGrowth() {
+        function fetchGrowth(min = 1, max = 12) {
             WAITING_LOADING =+ 1;
-            $.get('http://localhost:5000/api/purchases/growth', function (response) {
+            $.get('http://localhost:5000/api/purchases/growth?m=' + min + '&M=' + max, function (response) {
                 document.getElementById("growth").innerHTML = response;
                 WAITING_LOADING =- 1;
                 checkLoading();
@@ -103,7 +103,7 @@
         function drawRegionsMap(min = 1, max = 12) {
             WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/purchases/countrypurchases?m=' + min + '&M=' + max, function (response) {
-
+                
                 var chartData = [];
                 for (var idx = 0; idx < response.length; ++idx) {
                     var item = response[idx];
@@ -127,7 +127,7 @@
         function fetchTotalPurchasesAndGrowth(min = 1, max = 12) {
             WAITING_LOADING =+ 1;
             $.get('http://localhost:5000/api/purchases/volume?m=' + min + '&M=' + max, function (response) {
-
+                
                 var totalPurchases = 0;
                 totalPurchases = response[response.length - 1].value;
                 console.log(totalPurchases);
@@ -176,9 +176,9 @@
         
         function checkLoading() {
             if (WAITING_LOADING <= 0)
-                setTimeout(
-                    function() { $('#loading').hide('fast'); },
-                    1000);
+            setTimeout(
+            function() { $('#loading').hide('fast'); },
+            1000);
         }
         
         function reload(min, max) {
@@ -187,6 +187,7 @@
             fetchTotalPurchasesAndGrowth(min, max);
             drawChart(min, max);
             drawRegionsMap(min, max);
+            fetchGrowth(min, max);
         }
     </script>
     
@@ -329,6 +330,7 @@
         fetchTotalPurchasesAndGrowth();
         fetchInfo();
         fetchPurchasesBySupplier();
+        fetchGrowth();
     });
 </script>
 </body>

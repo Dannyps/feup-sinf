@@ -45,7 +45,25 @@ router.get('/countrypurchases', function (req, res, next) {
 
 
 router.get('/growth', function (req, res, next) {
-  res.json("12%");
+  let min, max;
+  typeof req.query.m !== "undefined" ? min = req.query.m : min = 1;
+  typeof req.query.m !== "undefined" ? max = req.query.M : max = 12;
+  con.query("SELECT round(sum(credit_amount),2) AS value, month(transaction_date) as m FROM sinf.credit_line AS cl INNER JOIN sinf.supplier AS sup ON cl.account_id = sup.account_id INNER JOIN transaction on cl.transaction_id = transaction.id group by month(transaction_date)", function (err, result) {
+    let r = [];
+    let foundM = 0,
+      foundm = 0;
+    result.forEach(e => {
+      if (e.m == min) foundm = 1;
+      if (e.m == max) foundM = 1;
+      r[e.m] = e.value;
+    });
+    if (!(foundm && foundM)) {
+      res.json("n/a");
+    } else {
+      res.json(((r[max]-r[min])/r[min]*100).toFixed(2) + "%");
+    }
+
+  });
 });
 
 /* GET total expenses for each supplier. */
